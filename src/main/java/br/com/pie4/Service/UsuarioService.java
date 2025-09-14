@@ -12,7 +12,7 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public UsuarioDTO cadastrarUsuario(UsuarioDTO usuarioCadastrar){
+    public Usuario cadastrarUsuario(UsuarioDTO usuarioCadastrar){
         Usuario usuario = new Usuario();
         usuario.setNome(usuarioCadastrar.getNome());
         usuario.setMail(usuarioCadastrar.getMail());
@@ -20,6 +20,9 @@ public class UsuarioService {
         usuario.setDocumento_pessoal(usuarioCadastrar.getDocumento_pessoal());
         usuario.setSenha(usuarioCadastrar.getSenha());
         return usuarioRepository.save(usuario);
+    }
+    public Usuario findById(Long id_usuario){
+        return usuarioRepository.findById(id_usuario).get();
     }
 
 }

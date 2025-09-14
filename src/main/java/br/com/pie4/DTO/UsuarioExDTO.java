@@ -1,38 +1,22 @@
-package br.com.pie4.Domain;
+package br.com.pie4.DTO;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Table(name = "tb_usuario")
-public class Usuario {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UsuarioExDTO {
     private Long id;
     private String nome;
     private String documento_pessoal;
     private String mail;
     private String telefone;
-    private String senha;
 
-    public Usuario() {
+    public UsuarioExDTO() {
     }
 
-    public Usuario(Long id, String nome, String documento_pessoal, String mail, String telefone, String senha) {
+    public UsuarioExDTO(Long id, String nome, String documento_pessoal, String mail, String telefone) {
         this.id = id;
         this.nome = nome;
         this.documento_pessoal = documento_pessoal;
         this.mail = mail;
         this.telefone = telefone;
-        this.senha = senha;
     }
 
     public Long getId() {
@@ -73,13 +57,5 @@ public class Usuario {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
     }
 }
