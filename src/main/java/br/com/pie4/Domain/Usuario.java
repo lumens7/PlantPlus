@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,17 +25,33 @@ public class Usuario {
     private String mail;
     private String telefone;
     private String senha;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "usuario_roles",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Roles> roles = new ArrayList<>();
 
     public Usuario() {
     }
 
-    public Usuario(Long id, String nome, String documento_pessoal, String mail, String telefone, String senha) {
+    public Usuario(Long id, String nome, String documento_pessoal, String mail, String telefone, String senha, List<Roles> roles) {
         this.id = id;
         this.nome = nome;
         this.documento_pessoal = documento_pessoal;
         this.mail = mail;
         this.telefone = telefone;
         this.senha = senha;
+        this.roles = roles;
+    }
+
+    public List<Roles> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Roles> roles) {
+        this.roles = roles;
     }
 
     public Long getId() {

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cadastro de Plantas</title>
+
+  <!-- fonte Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- link para o CSS -->
+  <link rel="stylesheet" href="/src/main/resources/static/css/cadastro_plantas_user.css">
+</head>
+<body>
+
+  <div class="card" role="region" aria-label="Cadastro de plantas">
+    <div class="bg"></div>
+
+    <div class="top-bar"></div>
+
+    <div class="logo-box">
+      <div class="inner"></div>
+    </div>
+
+    <div class="title">CADASTRO DE PLANTAS</div>
+
+    <div class="main-panel">
+      <!-- Form funcional -->
+      <form action="#" method="post">
+        <!-- Nome planta -->
+        <div class="field-block">
+          <label class="label-large" for="nomePlanta">NOME PLANTA</label>
+          <span class="label-small">nome planta...</span>
+          <input id="nomePlanta" name="nomePlanta" type="text" placeholder="Ex: Samambaia" required maxlength="100" />
+        </div>
+
+        <!-- Quantidade -->
+        <div class="field-block">
+          <label class="label-large" for="quantidade">QUANTIDADE</label>
+          <span class="label-small">quantidade...</span>
+          <input id="quantidade" name="quantidade" type="number" placeholder="Ex: 3" min="0" required />
+        </div>
+
+        <!-- Idade -->
+        <div class="field-block">
+          <label class="label-large" for="idade">IDADE</label>
+          <span class="label-small">idade...</span>
+          <input id="idade" name="idade" type="number" placeholder="Idade em meses" min="0" required />
+        </div>
+
+        <!-- Botão salvar -->
+        <div class="btn-area">
+          <button type="submit">SALVAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

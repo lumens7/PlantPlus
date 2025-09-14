@@ -11,10 +11,12 @@ import java.util.List;
 @Repository
 public interface PlantaUserRepository extends JpaRepository<PlantaUser, Long> {
 
-    @Query("SELECT p FROM PlantaUser p WHERE p.Usuario.id = :idUsuario")
+    @Query("SELECT p FROM PlantaUser p WHERE p.usuario.id = :idUsuario")
     List<PlantaUser> findByUsuarioId(@Param("idUsuario") Long idUsuario);
-    @Query("SELECT p FROM PlantaUser p WHERE p.Usuario.id = :idUsuario AND p.PlantaCie.nome LIKE %:nome_planta%")
-    List<PlantaUser> findByUsuarioIdAndPlantaCieNome(@Param("id_usuario") Long id_usuario, @Param("nome_planta") String nome_planta);
+
+    @Query("SELECT p FROM PlantaUser p WHERE p.usuario.id = :idUsuario AND p.plantaCie.nome LIKE %:nomePlanta%")
+    List<PlantaUser> findByUsuarioIdAndPlantaCieNome(@Param("idUsuario") Long idUsuario,
+                                                     @Param("nomePlanta") String nomePlanta);
 
 
 }
