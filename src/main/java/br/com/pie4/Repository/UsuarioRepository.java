@@ -12,10 +12,13 @@ import java.util.List;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    @Query("SELECT u FROM Usuario u WHERE u.nome = :nome_usuario")
+    @Query("SELECT u FROM Usuario u WHERE u.nome = %:nome_usuario%")
     List<Usuario> findByNome(@Param("nome_usuario") String nome_usuario);
     @Query("SELECT u FROM Usuario u WHERE u.documento_pessoal = :documento_pessoal")
-    List<Usuario> findByDocumento(@Param("documento_pessoal") String documento_pessoal);
+    Usuario findByDocumento(@Param("documento_pessoal") String documento_pessoal);
     @Query("SELECT u FROM Usuario u WHERE u.mail = :mail")
-    List<Usuario> findByMail(@Param("mail") String mail);
+    Usuario findByMail(@Param("mail") String mail);
+
+    @Query("SELECT u FROM Usuario u WHERE u.telefone = :telefone")
+    Usuario findByTelefone(@Param("telefone") String telefone);
 }

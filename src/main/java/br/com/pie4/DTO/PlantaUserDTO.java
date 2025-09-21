@@ -8,19 +8,29 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlantaUserDTO {
+    private Long id;
     private Integer quantidade;
     private Integer idade;
-    private UsuarioExDTO usuario;
-    private PlantaCieDTO plantaCie;
+    private Long id_usuario;
+    private Long id_plantaCie;
 
     public PlantaUserDTO() {
     }
 
-    public PlantaUserDTO(Integer quantidade, Integer idade, UsuarioExDTO usuario, PlantaCieDTO plantaCie) {
+    public PlantaUserDTO(Long id, Integer quantidade, Integer idade, Long id_usuario, Long id_plantaCie) {
+        this.id = id;
         this.quantidade = quantidade;
         this.idade = idade;
-        this.usuario = usuario;
-        this.plantaCie = plantaCie;
+        this.id_usuario = id_usuario;
+        this.id_plantaCie = id_plantaCie;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getQuantidade() {
@@ -39,19 +49,19 @@ public class PlantaUserDTO {
         this.idade = idade;
     }
 
-    public UsuarioExDTO getUsuario() {
-        return usuario;
+    public Long getId_usuario() {
+        return id_usuario;
     }
 
-    public void setUsuario(UsuarioExDTO usuario) {
-        this.usuario = usuario;
+    public void setId_usuario(Long id_usuario) {
+        this.id_usuario = id_usuario;
     }
 
-    public PlantaCieDTO getPlantaCie() {
-        return plantaCie;
+    public Long getId_plantaCie() {
+        return id_plantaCie;
     }
 
-    public void setPlantaCie(PlantaCieDTO plantaCie) {
-        this.plantaCie = plantaCie;
+    public void setId_plantaCie(Long id_plantaCie) {
+        this.id_plantaCie = id_plantaCie;
     }
 }

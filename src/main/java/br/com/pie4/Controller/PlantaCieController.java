@@ -21,16 +21,18 @@ public class PlantaCieController {
     public ResponseEntity<?> cadastrar(@RequestBody PlantaCieDTO plantaCieDTO){
         try{
             if (plantaCieDTO.getNome().isEmpty() || plantaCieDTO.getNome() == null){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nome da planta é obrigatório!");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nome da planta é obrigatório!");
             }
             if (plantaCieDTO.getNome_cientifico().isEmpty() || plantaCieDTO.getNome_cientifico() == null){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nome cientifico da planta é obrigatório!");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nome cientifico da planta é obrigatório!");
             }
             if (plantaCieDTO.getEspecie().isEmpty() || plantaCieDTO.getEspecie() == null){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Especie da planta é obrigatório!");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Especie da planta é obrigatório!");
             }
             PlantaCie plantaCie = plantaCieService.cadastrar(plantaCieDTO);
-            return ResponseEntity.ok(plantaCie);
+            return ResponseEntity.status(HttpStatus.CREATED).body(plantaCie);
+        }catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro interno:  " + e.getMessage());
@@ -40,7 +42,7 @@ public class PlantaCieController {
     public ResponseEntity<?> pesquisarNome(@RequestParam("nome")String nome){
         List<PlantaCie> plantaCies = plantaCieService.findByNome(nome);
         if (plantaCies == null || plantaCies.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma Planta Encontrada com o nome: "+ nome);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nenhuma Planta Encontrada com o nome: "+ nome);
         }
         return ResponseEntity.ok(plantaCies);
 
@@ -49,7 +51,7 @@ public class PlantaCieController {
     public ResponseEntity<?> pesquisarCientifico(@RequestParam("nome_cientifico")String nome_cientifico){
         List<PlantaCie> plantaCies = plantaCieService.findByNomeCientifico(nome_cientifico);
         if (plantaCies == null || plantaCies.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma Planta Encontrada com o nome cientifico: "+ nome_cientifico);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nenhuma Planta Encontrada com o nome cientifico: "+ nome_cientifico);
         }
         return ResponseEntity.ok(plantaCies);
     }
@@ -57,7 +59,7 @@ public class PlantaCieController {
     public ResponseEntity<?> pesquisarEspecie(@RequestParam("especie")String especie){
         List<PlantaCie> plantaCies = plantaCieService.findByEspecie(especie);
         if (plantaCies == null || plantaCies.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma Planta Encontrada com a especie: "+ especie);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nenhuma Planta Encontrada com a especie: "+ especie);
         }
         return ResponseEntity.ok(plantaCies);
     }
@@ -65,11 +67,43 @@ public class PlantaCieController {
     public ResponseEntity<?> pesquisarTodos(){
         List<PlantaCie> plantaCies = plantaCieService.findAll();
         if (plantaCies == null || plantaCies.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma Planta Encontrada! ");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nenhuma Planta Encontrada! ");
         }
         return ResponseEntity.ok(plantaCies);
     }
 
-    /*@PostMapping("/alterar")
-    public ResponseEntity<?> alterar(@RequestBody )*/
+    @PutMapping("/alterar")
+    public ResponseEntity<?> alterar(@RequestBody PlantaCieDTO plantaCieDTO) {
+        try {
+            if (plantaCieDTO.getId() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id da planta é obrigatório para alteração!");
+            }
+
+            PlantaCie plantaCie = plantaCieService.alterar(plantaCieDTO);
+            return ResponseEntity.ok(plantaCie);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro interno: " + e.getMessage());
+        }
+    }
+    @DeleteMapping("/deletar")
+    public ResponseEntity<?> deletar(@RequestParam("id")Long id, @RequestParam("idUsuario")Long idUsuario){
+        try{
+            if (id == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id da planta é obrigatório para exclusão!");
+            }
+            plantaCieService.deletarPlantaCie(id, idUsuario);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro interno:  " + e.getMessage());
+        }
+    }
+
+
 }

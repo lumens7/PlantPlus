@@ -1,67 +1,38 @@
-package br.com.pie4.Domain;
+package br.com.pie4.DTO;
 
-import jakarta.persistence.*;
+import br.com.pie4.Domain.Tarefas.Repetir;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "tb_tarefas")
-public class Tarefas {
-
-    public enum Repetir{
-        DOMINGO, SEGUNDA, TERCA, QUARTA, QUINTA, SEXTA, SABADO;
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TarefaDTO {
     private Long id;
     private String nome_tarefa;
-
-    @Column(columnDefinition = "TEXT")
     private String descricao_tarefa;
     private LocalDateTime hora_efetuar_atv;
-
-    @ManyToMany
-    @JoinTable(
-            name = "tarefas_planta_user",
-            joinColumns = @JoinColumn(name = "tarefa_id"),
-            inverseJoinColumns = @JoinColumn(name = "planta_user_id")
-    )
-    private List<PlantaUser> plantaUser;
-
-
-    @ElementCollection(targetClass = Repetir.class)
-    @CollectionTable(name = "tb_tarefa_repetir", joinColumns = @JoinColumn(name = "tarefa_id"))
-    @Enumerated(EnumType.STRING)
-    @Column(name = "dia_repeticao")
+    private List<Long> plantaUserIds;
     private List<Repetir> repetir;
     private LocalDateTime horario_efetuado_atv;
+    private Long usuarioId;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
-
-    public Tarefas() {
+    public TarefaDTO() {
     }
 
-    public Tarefas(Long id, String nome_tarefa, String descricao_tarefa, LocalDateTime hora_efetuar_atv, List<PlantaUser> plantaUser, List<Repetir> repetir, LocalDateTime horario_efetuado_atv, Usuario usuario) {
+    public TarefaDTO(Long id, String nome_tarefa, String descricao_tarefa, LocalDateTime hora_efetuar_atv, List<Long> plantaUserIds, List<Repetir> repetir, LocalDateTime horario_efetuado_atv, Long usuarioId) {
         this.id = id;
         this.nome_tarefa = nome_tarefa;
         this.descricao_tarefa = descricao_tarefa;
         this.hora_efetuar_atv = hora_efetuar_atv;
-        this.plantaUser = plantaUser;
+        this.plantaUserIds = plantaUserIds;
         this.repetir = repetir;
         this.horario_efetuado_atv = horario_efetuado_atv;
-        this.usuario = usuario;
+        this.usuarioId = usuarioId;
     }
 
     public Long getId() {
@@ -96,12 +67,12 @@ public class Tarefas {
         this.hora_efetuar_atv = hora_efetuar_atv;
     }
 
-    public List<PlantaUser> getPlantaUser() {
-        return plantaUser;
+    public List<Long> getPlantaUserIds() {
+        return plantaUserIds;
     }
 
-    public void setPlantaUser(List<PlantaUser> plantaUser) {
-        this.plantaUser = plantaUser;
+    public void setPlantaUserIds(List<Long> plantaUserIds) {
+        this.plantaUserIds = plantaUserIds;
     }
 
     public List<Repetir> getRepetir() {
@@ -120,11 +91,23 @@ public class Tarefas {
         this.horario_efetuado_atv = horario_efetuado_atv;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Long getUsuarioId() {
+        return usuarioId;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setUsuarioId(Long usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
+    @Override
+    public String toString() {
+        return "TarefaDTO{" +
+                "nome_tarefa='" + nome_tarefa + '\'' +
+                ", descricao_tarefa='" + descricao_tarefa + '\'' +
+                ", hora_efetuar_atv=" + hora_efetuar_atv +
+                ", plantaUserIds=" + plantaUserIds +
+                ", repetir=" + repetir +
+                ", horario_efetuado_atv=" + horario_efetuado_atv +
+                '}';
     }
 }

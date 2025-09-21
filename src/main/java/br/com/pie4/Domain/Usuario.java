@@ -33,7 +33,7 @@ public class Usuario {
     )
     private List<Roles> roles = new ArrayList<>();
 
-    public Usuario() {
+    public Usuario(Object o, String maria, String number, String mail, String id, String senha) {
     }
 
     public Usuario(Long id, String nome, String documento_pessoal, String mail, String telefone, String senha, List<Roles> roles) {

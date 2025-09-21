@@ -21,12 +21,14 @@ public class UsuarioController {
             if (usuarioCadastrar.getSenha().length() < 8){
                 return ResponseEntity.badRequest().body("A senha deve ter no minimo 8 caracteres!");
             }
-            if (usuarioCadastrar.getSenha() != usuarioCadastrar.getConfirmarSenha()){
+            if (!usuarioCadastrar.getSenha().equals(usuarioCadastrar.getConfirmarSenha())){
                 return ResponseEntity.badRequest().body("As duas senhas informadas são divergentes!");
             }
 
             Usuario usuario1 = usuarioService.cadastrarUsuario(usuarioCadastrar);
-            return ResponseEntity.ok("Usuário cadastrado com Sucesso!\n"+usuarioCadastrar.toString());
+            return ResponseEntity.status(HttpStatus.CREATED).body(usuario1);
+        }catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao iniciar cadastro: " + e.getMessage());

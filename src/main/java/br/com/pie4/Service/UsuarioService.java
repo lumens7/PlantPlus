@@ -15,7 +15,16 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     public Usuario cadastrarUsuario(UsuarioDTO usuarioCadastrar){
-        Usuario usuario = new Usuario();
+        if (usuarioRepository.findByDocumento(usuarioCadastrar.getDocumento_pessoal()) != null){
+            throw new IllegalArgumentException("Documento já cadastrado em outro usuário!");
+        }
+        if (usuarioRepository.findByMail(usuarioCadastrar.getMail()) != null){
+            throw new IllegalArgumentException("E-mail já cadastrado em outro usuário!");
+        }
+        if (usuarioRepository.findByTelefone(usuarioCadastrar.getTelefone()) != null){
+            throw new IllegalArgumentException("Telefone já cadastrado em outro usuário!");
+        }
+        Usuario usuario = new Usuario(null, "Maria", "98765432100", "maria@mail.com", "11888888888", "senha");
         usuario.setNome(usuarioCadastrar.getNome());
         usuario.setMail(usuarioCadastrar.getMail());
         usuario.setTelefone(usuarioCadastrar.getTelefone());
@@ -40,25 +49,19 @@ public class UsuarioService {
     }
 
     public Usuario findByDocumento(String documento){
-        List<Usuario> usuarios = usuarioRepository.findByDocumento(documento);
-        if (usuarios.isEmpty()) {
-            return null;
+        Usuario usuarios = usuarioRepository.findByDocumento(documento);
+        if (usuarios.getId() != null){
+            throw new IllegalArgumentException("Este documento já foi cadastrado em outro usuário!");
         }
-        if (usuarios.size() > 1){
-            throw new IllegalArgumentException("Mais de um usuário cadastrado com o mesmo documento");
-        }
-        return usuarios.get(0);
+        return usuarios;
     }
 
     public Usuario findByMail(String mail){
-        List<Usuario> usuarios = usuarioRepository.findByMail(mail);
-        if (usuarios.isEmpty()) {
-            return null;
+        Usuario usuarios = usuarioRepository.findByMail(mail);
+        if (usuarios.getId() != null){
+            throw new IllegalArgumentException("Este e-mail já foi cadastrado em outro usuário!");
         }
-        if (usuarios.size() > 1){
-            throw new IllegalArgumentException("Mais de um usuário cadastrado com o mesmo e-mail");
-        }
-        return usuarios.get(0);
+        return usuarios;
     }
 }
 
