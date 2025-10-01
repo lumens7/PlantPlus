@@ -12,12 +12,12 @@ import lombok.Setter;
 public class PlantaCieDTO {
     private Long id;
     private String nome;
-    private String nome_cientifico;
+    private String nomeCientifico;
     private String especie;
     private String rega;
     private String poda;
-    private String resumo_dados_planta;
-    private String url_foto;
+    private String resumoDadosPlanta;
+    private String urlFoto;
 
     public PlantaCieDTO() {
     }
@@ -25,12 +25,12 @@ public class PlantaCieDTO {
     public PlantaCieDTO(Long id, String nome, String nome_cientifico, String especie, String rega, String poda, String resumo_dados_planta, String url_foto) {
         this.id = id;
         this.nome = nome;
-        this.nome_cientifico = nome_cientifico;
+        this.nomeCientifico = nome_cientifico;
         this.especie = especie;
         this.rega = rega;
         this.poda = poda;
-        this.resumo_dados_planta = resumo_dados_planta;
-        this.url_foto = url_foto;
+        this.resumoDadosPlanta = resumo_dados_planta;
+        this.urlFoto = url_foto;
     }
 
     public Long getId() {
@@ -49,12 +49,12 @@ public class PlantaCieDTO {
         this.nome = nome;
     }
 
-    public String getNome_cientifico() {
-        return nome_cientifico;
+    public String getNomeCientifico() {
+        return nomeCientifico;
     }
 
-    public void setNome_cientifico(String nome_cientifico) {
-        this.nome_cientifico = nome_cientifico;
+    public void setNomeCientifico(String nomeCientifico) {
+        this.nomeCientifico = nomeCientifico;
     }
 
     public String getEspecie() {
@@ -81,19 +81,19 @@ public class PlantaCieDTO {
         this.poda = poda;
     }
 
-    public String getResumo_dados_planta() {
-        return resumo_dados_planta;
+    public String getResumoDadosPlanta() {
+        return resumoDadosPlanta;
     }
 
-    public void setResumo_dados_planta(String resumo_dados_planta) {
-        this.resumo_dados_planta = resumo_dados_planta;
+    public void setResumoDadosPlanta(String resumoDadosPlanta) {
+        this.resumoDadosPlanta = resumoDadosPlanta;
     }
 
-    public String getUrl_foto() {
-        return url_foto;
+    public String getUrlFoto() {
+        return urlFoto;
     }
 
-    public void setUrl_foto(String url_foto) {
-        this.url_foto = url_foto;
+    public void setUrlFoto(String urlFoto) {
+        this.urlFoto = urlFoto;
     }
 }

@@ -77,12 +77,12 @@ class PlantaUserServiceTest {
         plantaBase = plantaCieRepository.save(new PlantaCie(
                 null,
                 cieDTO.getNome(),
-                cieDTO.getNome_cientifico(),
+                cieDTO.getNomeCientifico(),
                 cieDTO.getEspecie(),
                 cieDTO.getRega(),
                 cieDTO.getPoda(),
-                cieDTO.getResumo_dados_planta(),
-                cieDTO.getUrl_foto()
+                cieDTO.getResumoDadosPlanta(),
+                cieDTO.getUrlFoto()
         ));
 
         // Criando plantaUser

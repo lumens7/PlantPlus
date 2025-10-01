@@ -31,12 +31,12 @@ class PlantaCieServiceTest {
 
         PlantaCieDTO dto = new PlantaCieDTO();
         dto.setNome("Rosa");
-        dto.setNome_cientifico("Rosa rubiginosa");
+        dto.setNomeCientifico("Rosa rubiginosa");
         dto.setEspecie("Rosaceae");
         dto.setRega("2x por semana");
         dto.setPoda("Anual");
-        dto.setResumo_dados_planta("Planta ornamental");
-        dto.setUrl_foto("http://exemplo.com/rosa.png");
+        dto.setResumoDadosPlanta("Planta ornamental");
+        dto.setUrlFoto("http://exemplo.com/rosa.png");
 
         plantaBase = plantaCieService.cadastrar(dto);
     }
@@ -87,12 +87,12 @@ class PlantaCieServiceTest {
         PlantaCieDTO dto = new PlantaCieDTO();
         dto.setId(plantaBase.getId());
         dto.setNome("Rosa Vermelha");
-        dto.setNome_cientifico("Rosa gallica");
+        dto.setNomeCientifico("Rosa gallica");
         dto.setEspecie("Rosaceae");
         dto.setRega("3x por semana");
         dto.setPoda("Semestral");
-        dto.setResumo_dados_planta("Planta medicinal e ornamental");
-        dto.setUrl_foto("http://exemplo.com/rosa-vermelha.png");
+        dto.setResumoDadosPlanta("Planta medicinal e ornamental");
+        dto.setUrlFoto("http://exemplo.com/rosa-vermelha.png");
 
         // Act: chama o service de alteração
         PlantaCie plantaAlterada = plantaCieService.alterar(dto);

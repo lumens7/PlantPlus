@@ -24,7 +24,7 @@ public class UsuarioService {
         if (usuarioRepository.findByTelefone(usuarioCadastrar.getTelefone()) != null){
             throw new IllegalArgumentException("Telefone já cadastrado em outro usuário!");
         }
-        Usuario usuario = new Usuario(null, "Maria", "98765432100", "maria@mail.com", "11888888888", "senha");
+        Usuario usuario = new Usuario();
         usuario.setNome(usuarioCadastrar.getNome());
         usuario.setMail(usuarioCadastrar.getMail());
         usuario.setTelefone(usuarioCadastrar.getTelefone());

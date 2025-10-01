@@ -20,21 +20,21 @@ public class PlantaCieService {
     @Autowired
     private PlantaUserRepository plantaUserRepository;
     public PlantaCie cadastrar(PlantaCieDTO plantaCieDTO){
-        if (!plantaCieRepository.findByNomeCientifico(plantaCieDTO.getNome_cientifico()).isEmpty()){
+        if (!plantaCieRepository.findByNomeCientifico(plantaCieDTO.getNomeCientifico()).isEmpty()){
             throw new IllegalArgumentException("Nome cientifico já cadastrada!");
         }
-        if (!plantaCieRepository.findByUrlFoto(plantaCieDTO.getUrl_foto()).isEmpty()){
+        if (!plantaCieRepository.findByUrlFoto(plantaCieDTO.getUrlFoto()).isEmpty()){
             throw new IllegalArgumentException("Foto já está cadastrada!");
         }
 
         PlantaCie plantaCie = new PlantaCie();
         plantaCie.setNome(plantaCieDTO.getNome());
-        plantaCie.setNomeCientifico(plantaCieDTO.getNome_cientifico());
+        plantaCie.setNomeCientifico(plantaCieDTO.getNomeCientifico());
         plantaCie.setEspecie(plantaCieDTO.getEspecie());
         plantaCie.setRega(plantaCieDTO.getRega());
         plantaCie.setPoda(plantaCieDTO.getPoda());
-        plantaCie.setResumoDadosPlanta(plantaCieDTO.getResumo_dados_planta());
-        plantaCie.setUrlFoto(plantaCieDTO.getUrl_foto());
+        plantaCie.setResumoDadosPlanta(plantaCieDTO.getResumoDadosPlanta());
+        plantaCie.setUrlFoto(plantaCieDTO.getUrlFoto());
         return plantaCieRepository.save(plantaCie);
     }
     public List<PlantaCie> findByNome(String nome){
@@ -62,12 +62,12 @@ public class PlantaCieService {
 
         // Atualiza somente os campos vindos do DTO
         plantaCie.setNome(plantaCieDTO.getNome());
-        plantaCie.setNomeCientifico(plantaCieDTO.getNome_cientifico());
+        plantaCie.setNomeCientifico(plantaCieDTO.getNomeCientifico());
         plantaCie.setEspecie(plantaCieDTO.getEspecie());
         plantaCie.setRega(plantaCieDTO.getRega());
         plantaCie.setPoda(plantaCieDTO.getPoda());
-        plantaCie.setResumoDadosPlanta(plantaCieDTO.getResumo_dados_planta());
-        plantaCie.setUrlFoto(plantaCieDTO.getUrl_foto());
+        plantaCie.setResumoDadosPlanta(plantaCieDTO.getResumoDadosPlanta());
+        plantaCie.setUrlFoto(plantaCieDTO.getUrlFoto());
 
         return plantaCieRepository.save(plantaCie);
     }

@@ -25,6 +25,7 @@ public class Usuario {
     private String mail;
     private String telefone;
     private String senha;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuario_roles",
@@ -33,7 +34,7 @@ public class Usuario {
     )
     private List<Roles> roles = new ArrayList<>();
 
-    public Usuario(Object o, String maria, String number, String mail, String id, String senha) {
+    public Usuario() {
     }
 
     public Usuario(Long id, String nome, String documento_pessoal, String mail, String telefone, String senha, List<Roles> roles) {

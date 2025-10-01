@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @RequestMapping(value = "/api/plant/user")
 public class PlantaUserController {
 
@@ -24,7 +25,7 @@ public class PlantaUserController {
     public ResponseEntity<?> cadastrar(@RequestBody PlantaUserDTO plantaUserDTO){
         try{
             PlantaUser plantaUser = plantaUserService.cadastrar(plantaUserDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(plantaUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(plantaUserDTO);
         }catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }catch (Exception e){

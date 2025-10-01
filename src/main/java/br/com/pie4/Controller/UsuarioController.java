@@ -26,7 +26,7 @@ public class UsuarioController {
             }
 
             Usuario usuario1 = usuarioService.cadastrarUsuario(usuarioCadastrar);
-            return ResponseEntity.status(HttpStatus.CREATED).body(usuario1);
+            return ResponseEntity.status(HttpStatus.CREATED).body(usuarioCadastrar);
         }catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }catch (Exception e){

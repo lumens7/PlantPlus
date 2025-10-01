@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://127.0.0.1:5500")
@@ -24,14 +23,14 @@ public class PlantaCieController {
             if (plantaCieDTO.getNome().isEmpty() || plantaCieDTO.getNome() == null){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nome da planta é obrigatório!");
             }
-            if (plantaCieDTO.getNome_cientifico().isEmpty() || plantaCieDTO.getNome_cientifico() == null){
+            if (plantaCieDTO.getNomeCientifico().isEmpty() || plantaCieDTO.getNomeCientifico() == null){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nome cientifico da planta é obrigatório!");
             }
             if (plantaCieDTO.getEspecie().isEmpty() || plantaCieDTO.getEspecie() == null){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Especie da planta é obrigatório!");
             }
             PlantaCie plantaCie = plantaCieService.cadastrar(plantaCieDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(plantaCie);
+            return ResponseEntity.status(HttpStatus.CREATED).body(plantaCieDTO);
         }catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }catch (Exception e){
@@ -48,8 +47,8 @@ public class PlantaCieController {
         return ResponseEntity.ok(plantaCies);
 
     }
-    @GetMapping("/pesquisar/cientifico")
-    public ResponseEntity<?> pesquisarCientifico(@RequestParam("nome_cientifico")String nome_cientifico){
+    @GetMapping("/pesquisar/nomeCientifico")
+    public ResponseEntity<?> pesquisarCientifico(@RequestParam("nomeCientifico")String nome_cientifico){
         List<PlantaCie> plantaCies = plantaCieService.findByNomeCientifico(nome_cientifico);
         if (plantaCies == null || plantaCies.isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nenhuma Planta Encontrada com o nome cientifico: "+ nome_cientifico);

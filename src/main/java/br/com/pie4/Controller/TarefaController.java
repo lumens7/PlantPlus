@@ -27,7 +27,7 @@ public class TarefaController {
             }
             Tarefas tarefas = tarefaService.cadastrarTarefa(tarefaDTO);
 //            return ResponseEntity.ok("Tarefa cadastrada com sucesso!\n"+tarefaDTO.toString());
-           return ResponseEntity.status(HttpStatus.CREATED).body(tarefas);
+           return ResponseEntity.status(HttpStatus.CREATED).body(tarefaDTO);
         }catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }catch (Exception e){

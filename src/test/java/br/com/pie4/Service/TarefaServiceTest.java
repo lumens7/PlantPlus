@@ -71,8 +71,8 @@ class TarefaServiceTest {
                 "Rega moderada", "Poda mínima", "planta vermelha", "https://foto.com"
         );
         plantaBase = plantaCieRepository.save(new PlantaCie(
-                null, cieDTO.getNome(), cieDTO.getNome_cientifico(), cieDTO.getEspecie(),
-                cieDTO.getRega(), cieDTO.getPoda(), cieDTO.getResumo_dados_planta(), cieDTO.getUrl_foto()
+                null, cieDTO.getNome(), cieDTO.getNomeCientifico(), cieDTO.getEspecie(),
+                cieDTO.getRega(), cieDTO.getPoda(), cieDTO.getResumoDadosPlanta(), cieDTO.getUrlFoto()
         ));
 
         // Planta do usuário

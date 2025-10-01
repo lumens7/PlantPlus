@@ -14,10 +14,10 @@ public interface PlantaUserRepository extends JpaRepository<PlantaUser, Long> {
     @Query("SELECT p FROM PlantaUser p WHERE p.usuario.id = :idUsuario")
     List<PlantaUser> findByUsuarioId(@Param("idUsuario") Long idUsuario);
 
-    @Query("SELECT p FROM PlantaUser p WHERE p.usuario.id = :idUsuario AND p.plantaCie.nome LIKE %:nomePlanta%")
+    @Query("SELECT p FROM PlantaUser p WHERE p.usuario.id = :idUsuario AND p.plantaCie.nome ILIKE %:nomePlanta%")
     List<PlantaUser> findByUsuarioIdAndPlantaCieNome(@Param("idUsuario") Long idUsuario,
                                                      @Param("nomePlanta") String nomePlanta);
 
-    @Query("SELECT p FROM PlantaUser p WHERE p.plantaCie.nome LIKE %:nomePlanta%")
+    @Query("SELECT p FROM PlantaUser p WHERE p.plantaCie.nome ILIKE %:nomePlanta%")
     List<PlantaUser> findByPlantaCieNome(@Param("nomePlanta")String nome);
 }

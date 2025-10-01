@@ -14,10 +14,10 @@ public interface PlantaCieRepository extends JpaRepository<PlantaCie, Long> {
 
     List<PlantaCie> findByEspecie(String especie);
 
-    @Query("SELECT p FROM PlantaCie p WHERE p.nome LIKE %:nome%")
+    @Query("SELECT p FROM PlantaCie p WHERE p.nome ILIKE %:nome%")
     List<PlantaCie> findByNome(@Param("nome") String nome);
 
-    @Query("SELECT p FROM PlantaCie p WHERE p.nomeCientifico LIKE %:nomeCientifico%")
+    @Query("SELECT p FROM PlantaCie p WHERE p.nomeCientifico ILIKE %:nomeCientifico%")
     List<PlantaCie> findByNomeCientifico(@Param("nomeCientifico") String nomeCientifico);
 
     List<PlantaCie> findByUrlFoto(String urlFoto);

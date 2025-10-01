@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plantas User</title>
+  <link rel="stylesheet" href="/src/main/resources/static/css/plantas_cie.css">
+  <link rel="stylesheet" href="/src/main/resources/static/css/plantas_cie_cadastro.css">
+  <link rel="stylesheet" href="/src/main/resources/static/css/menu.css">
+  <script defer src="/src/main/resources/static/js/plantas_user.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header class="header">
+      <button class="menu-btn"><img src="/src/main/resources/static/img/menu.svg" alt=""></button>
+      <h1>PLANTAS DO USUÁRIO</h1>
+    </header>
+
+    <!-- Ações -->
+    <div class="actions">
+      <button id="btn-add" class="action-btn">+</button>
+      <button id="btn-search" class="action-btn"><img src="/src/main/resources/static/img/search.svg" alt=""></button>
+    </div>
+
+    <!-- Área de pesquisa -->
+    <div id="search-area" class="search-area" style="display: none;">
+      <select id="search-method">
+        <option value="nome">Nome</option>
+        <option value="id">ID</option>
+      </select>
+      <input type="text" id="search-value" placeholder="Digite o valor da pesquisa...">
+      <button id="btn-do-search">Pesquisar</button>
+    </div>
+
+    <!-- Lista de Plantas do User -->
+    <section id="plantas-user-list" class="plantas-list">
+      <!-- preenchido via JS -->
+    </section>
+    
+  </div>
+</body>
+</html>
