@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -32,12 +34,12 @@ public class Usuario {
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private List<Roles> roles = new ArrayList<>();
+    private Set<Roles> roles = new HashSet<>();
 
     public Usuario() {
     }
 
-    public Usuario(Long id, String nome, String documento_pessoal, String mail, String telefone, String senha, List<Roles> roles) {
+    public Usuario(Long id, String nome, String documento_pessoal, String mail, String telefone, String senha, Set<Roles> roles) {
         this.id = id;
         this.nome = nome;
         this.documento_pessoal = documento_pessoal;
@@ -47,11 +49,11 @@ public class Usuario {
         this.roles = roles;
     }
 
-    public List<Roles> getRoles() {
+    public Set<Roles> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Roles> roles) {
+    public void setRoles(Set<Roles> roles) {
         this.roles = roles;
     }
 

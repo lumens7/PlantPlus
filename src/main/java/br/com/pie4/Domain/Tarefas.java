@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -28,9 +29,9 @@ public class Tarefas {
 
     @Column(columnDefinition = "TEXT")
     private String descricao_tarefa;
-    private LocalDateTime hora_efetuar_atv;
+    private LocalTime hora_efetuar_atv;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "tarefas_planta_user",
             joinColumns = @JoinColumn(name = "tarefa_id"),
@@ -44,7 +45,7 @@ public class Tarefas {
     @Enumerated(EnumType.STRING)
     @Column(name = "dia_repeticao")
     private List<Repetir> repetir;
-    private LocalDateTime horario_efetuado_atv;
+    //private LocalDateTime horario_efetuado_atv;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
@@ -53,14 +54,13 @@ public class Tarefas {
     public Tarefas() {
     }
 
-    public Tarefas(Long id, String nome_tarefa, String descricao_tarefa, LocalDateTime hora_efetuar_atv, List<PlantaUser> plantaUser, List<Repetir> repetir, LocalDateTime horario_efetuado_atv, Usuario usuario) {
+    public Tarefas(Long id, String nome_tarefa, String descricao_tarefa, LocalTime hora_efetuar_atv, List<PlantaUser> plantaUser, List<Repetir> repetir, Usuario usuario) {
         this.id = id;
         this.nome_tarefa = nome_tarefa;
         this.descricao_tarefa = descricao_tarefa;
         this.hora_efetuar_atv = hora_efetuar_atv;
         this.plantaUser = plantaUser;
         this.repetir = repetir;
-        this.horario_efetuado_atv = horario_efetuado_atv;
         this.usuario = usuario;
     }
 
@@ -88,11 +88,11 @@ public class Tarefas {
         this.descricao_tarefa = descricao_tarefa;
     }
 
-    public LocalDateTime getHora_efetuar_atv() {
+    public LocalTime getHora_efetuar_atv() {
         return hora_efetuar_atv;
     }
 
-    public void setHora_efetuar_atv(LocalDateTime hora_efetuar_atv) {
+    public void setHora_efetuar_atv(LocalTime hora_efetuar_atv) {
         this.hora_efetuar_atv = hora_efetuar_atv;
     }
 
@@ -110,14 +110,6 @@ public class Tarefas {
 
     public void setRepetir(List<Repetir> repetir) {
         this.repetir = repetir;
-    }
-
-    public LocalDateTime getHorario_efetuado_atv() {
-        return horario_efetuado_atv;
-    }
-
-    public void setHorario_efetuado_atv(LocalDateTime horario_efetuado_atv) {
-        this.horario_efetuado_atv = horario_efetuado_atv;
     }
 
     public Usuario getUsuario() {

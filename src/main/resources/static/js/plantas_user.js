@@ -1,7 +1,7 @@
-const API_URL_USER = "http://localhost:8080/api/plant/user";
-const ID_USUARIO = 1; // 🔹 depois você troca pelo usuário logado
+const ID_USUARIO = localStorage.getItem("id"); // 🔹 depois você troca pelo usuário logado
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (!validarAcesso(["ROLE_PLANTAS_USER"])) return;
   montarModalUser();
   carregarPlantasUser();
 
@@ -27,9 +27,21 @@ function montarModalUser() {
       <h2>CADASTRO PLANTA USER</h2>
 
       <input type="hidden" id="id">
+      <input type="hidden" id="id_plantaCie">
 
-      <label for="id_plantaCie">ID PLANTA CIE</label>
-      <input type="number" id="id_plantaCie" placeholder="id da planta cie...">
+      <label for="nomePlantaBusca">NOME DA PLANTA</label>
+      <div id="busca-wrapper">
+        <div id="busca-container">
+          <input type="text" id="nomePlantaBusca" placeholder="digite o nome da planta...">
+        </div>
+        <select id="resultadoBusca">
+          <option value="">Digite para buscar...</option>
+        </select>
+      </div>
+      <label for="previewPlanta">FOTO DA PLANTA</label>
+      <div class="input-img">
+        <img id="previewPlanta" src="/src/main/resources/static/img/img.svg" alt="preview planta">
+      </div>
 
       <label for="quantidade">QUANTIDADE</label>
       <input type="number" id="quantidade" placeholder="quantidade...">
@@ -43,18 +55,111 @@ function montarModalUser() {
   `;
   document.body.appendChild(modal);
 
-  // Bind eventos
   document.getElementById("btn-add").addEventListener("click", abrirModalNovoUser);
   document.getElementById("btn-fechar").addEventListener("click", () => (modal.style.display = "none"));
   document.getElementById("btn-salvar").addEventListener("click", salvarPlantaUser);
+
+  // Evento de busca automática
+  const inputBusca = document.getElementById("nomePlantaBusca");
+  let debounceTimer;
+
+  inputBusca.addEventListener("input", () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(buscarPlantasCie, 300); // executa 300ms após parar de digitar
+  });
 }
+async function buscarPlantasCie() {
+  const termo = document.getElementById("nomePlantaBusca").value.trim().toLowerCase();
+  const selectResultados = document.getElementById("resultadoBusca");
+
+  selectResultados.innerHTML = '<option value="">Buscando...</option>';
+
+  if (!termo || termo.length < 2) {
+    selectResultados.innerHTML = '<option value="">Digite pelo menos 2 letras</option>';
+    return;
+  }
+
+  try {
+    //const token = localStorage.getItem("token"); // token salvo no login
+
+    const response = await fetch(`${API_URL_USER}/plant/cie/pesquisar/todos`, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (!response.ok) throw new Error("Erro ao buscar plantas CIE");
+
+    const plantas = await response.json();
+
+    const filtradas = plantas.filter(
+      p =>
+        p.nome?.toLowerCase().includes(termo) ||
+        p.nomeCientifico?.toLowerCase().includes(termo)
+    );
+
+    selectResultados.innerHTML = '<option value="">Selecione uma planta</option>';
+
+    if (filtradas.length === 0) {
+      const opt = document.createElement("option");
+      opt.value = "";
+      opt.textContent = "Nenhuma planta encontrada";
+      selectResultados.appendChild(opt);
+    } else {
+      filtradas.forEach(planta => {
+        const opt = document.createElement("option");
+        opt.value = planta.id;
+        opt.textContent = `${planta.nome} (${planta.nomeCientifico})`;
+        selectResultados.appendChild(opt);
+      });
+    }
+
+    selectResultados.onchange = e => {
+      const plantaSelecionada = filtradas.find(p => p.id == e.target.value);
+      if (plantaSelecionada) selecionarPlantaCie(plantaSelecionada);
+    };
+
+  } catch (error) {
+    console.error("Erro ao buscar plantas:", error);
+    selectResultados.innerHTML = '<option value="">Erro ao buscar</option>';
+  }
+}
+
+
+function selecionarPlantaCie(planta) {
+  // Preenche os campos do modal
+  document.getElementById("id_plantaCie").value = planta.id;
+  document.getElementById("nomePlantaBusca").value = planta.nome;
+
+  // Atualiza a foto da planta
+  const previewImg = document.getElementById("previewPlanta");
+  previewImg.src = planta.urlFoto || "/src/main/resources/static/img/img.svg";
+
+  // Fecha a lista de resultados
+  const selectResultados = document.getElementById("resultadoBusca");
+  selectResultados.innerHTML = '<option value="">Selecione uma planta</option>';
+}
+
+
+function abrirModalNovoUser() {
+  document.querySelectorAll("#modal-cadastro-user input").forEach(el => (el.value = ""));
+  document.getElementById("resultadoBusca").innerHTML = '<option value="">Digite para buscar...</option>';
+  document.getElementById("modal-cadastro-user").style.display = "flex";
+}
+
 
 // ======================
 // CARREGAR LISTA
 // ======================
 async function carregarPlantasUser() {
   try {
-    const response = await fetch(`${API_URL_USER}/pesquisar/plant_user?id_plant_user=${ID_USUARIO}`);
+    const response = await fetch(`${API_URL_USER}/plant/user/pesquisar/plant_user?id_plant_user=${ID_USUARIO}`, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
     if (!response.ok) throw new Error("Erro ao buscar plantas do usuário");
 
     const plantas = await response.json();
@@ -78,9 +183,9 @@ async function pesquisarPlantasUser() {
 
   let url = "";
   if (metodo === "nome") {
-    url = `${API_URL_USER}/pesquisar/nome?nome=${encodeURIComponent(valor)}`;
+    url = `${API_URL_USER}/plant/user/pesquisar/nome?nome=${encodeURIComponent(valor)}`;
   } else if (metodo === "id") {
-    url = `${API_URL_USER}/pesquisar/plant_user?id_plant_user=${encodeURIComponent(valor)}`;
+    url = `${API_URL_USER}/plant/user/pesquisar/plant_user?id_plant_user=${encodeURIComponent(valor)}`;
   }
 
   try {
@@ -99,19 +204,20 @@ async function pesquisarPlantasUser() {
 // RENDERIZA LISTA
 // ======================
 function renderizarListaUser(plantas) {
-  const lista = document.getElementById("plantas-user-list");
+  const lista = document.getElementById("main-list");
   lista.innerHTML = "";
 
   plantas.forEach(planta => {
     const card = document.createElement("div");
-    card.className = "planta-card";
+    card.className = "main-card";
     card.innerHTML = `
       <div>
         <h2>ID: ${planta.id}</h2>
-        <div class="dados-plant">
-          <p>Planta CIE: ${planta.plantaCie ? planta.plantaCie.nomeCientifico : "N/A"}</p>
+        <div class="dados-main">
+          <p>${planta.plantaCie ? planta.plantaCie.nomeCientifico : "N/A"}</p>
           <p>Quantidade: ${planta.quantidade}</p>
           <p>Idade: ${planta.idade} meses</p>
+          <img src="${planta.plantaCie.urlFoto}" alt="foto_planta" class="foto-main">
         </div>
       </div>
       <div class="card-actions">
@@ -147,7 +253,12 @@ function abrirModalNovoUser() {
 // ======================
 async function abrirModalEdicaoUser(id) {
   try {
-    const response = await fetch(`${API_URL_USER}/pesquisar/plant_user?id_plant_user=${ID_USUARIO}`);
+    const response = await fetch(`${API_URL_USER}/plant/user/pesquisar/plant_user?id_plant_user=${ID_USUARIO}`, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
     const plantas = await response.json();
     const planta = plantas.find(p => p.id == id);
 
@@ -157,7 +268,7 @@ async function abrirModalEdicaoUser(id) {
     document.getElementById("id_plantaCie").value = planta.plantaCie ? planta.plantaCie.id : "";
     document.getElementById("quantidade").value = planta.quantidade || "";
     document.getElementById("idade").value = planta.idade || "";
-
+    
     document.getElementById("modal-cadastro-user").style.display = "flex";
   } catch (error) {
     console.error("Erro:", error);
@@ -177,19 +288,25 @@ async function salvarPlantaUser() {
   };
 
   try {
-    const url = plantaUser.id ? `${API_URL_USER}/alterar` : `${API_URL_USER}/cadastrar`;
+    const url = plantaUser.id ? `${API_URL_USER}/plant/user/alterar` : `${API_URL_USER}/plant/user/cadastrar`;
     const method = plantaUser.id ? "PUT" : "POST";
 
     const response = await fetch(url, {
       method,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(plantaUser)
     });
 
     if (!response.ok) throw new Error("Erro ao salvar planta do usuário");
 
-    alert(plantaUser.id ? "Planta atualizada com sucesso!" : "Planta cadastrada com sucesso!");
-    document.getElementById("modal-cadastro-user").style.display = "none";
+    // alert(plantaUser.id ? "Planta atualizada com sucesso!" : "Planta cadastrada com sucesso!");
+    mostrarPopupSucesso(plantaUser.id ? "Planta atualizada com sucesso!" : "Planta cadastrada com sucesso!")
+    setTimeout(()=>{
+      document.getElementById("modal-cadastro-user").style.display = "none";
+    }, 2000)
     carregarPlantasUser();
   } catch (error) {
     console.error("Erro:", error);
@@ -201,16 +318,36 @@ async function salvarPlantaUser() {
 // DELETAR
 // ======================
 async function deletarPlantaUser(id) {
-  if (!confirm("Deseja realmente excluir esta planta?")) return;
+  confirmarAcao(
+    "Deseja realmente excluir esta planta?",
+    async () => {
+      try {
+        const response = await fetch(
+          `${API_URL_USER}/plant/user/deletar?id=${id}&idUsuario=${ID_USUARIO}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          }
+        );
 
-  try {
-    const response = await fetch(`${API_URL_USER}/deletar?id=${id}&idUsuario=${ID_USUARIO}`, { method: "DELETE" });
-    if (!response.ok) throw new Error("Erro ao excluir planta");
+        if (!response.ok) {
+          const msg = await response.text();
+          throw new Error(msg || "Erro ao excluir planta");
+        }
 
-    alert("Planta excluída com sucesso!");
-    carregarPlantasUser();
-  } catch (error) {
-    console.error("Erro:", error);
-    alert("Erro ao excluir planta do usuário");
-  }
+        mostrarPopupSucesso("Planta excluída com sucesso!");
+        setTimeout(() => carregarPlantasUser(), 3000);
+
+      } catch (error) {
+        console.error("Erro:", error);
+        alert("Erro ao excluir planta do usuário: " + error.message);
+      }
+    },
+    () => {
+      console.log("Usuário cancelou a exclusão.");
+    }
+  );
 }

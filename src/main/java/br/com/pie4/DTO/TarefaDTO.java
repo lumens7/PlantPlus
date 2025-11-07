@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -15,24 +16,33 @@ public class TarefaDTO {
     private Long id;
     private String nome_tarefa;
     private String descricao_tarefa;
-    private LocalDateTime hora_efetuar_atv;
+    private LocalTime hora_efetuar_atv;
     private List<Long> plantaUserIds;
     private List<Repetir> repetir;
-    private LocalDateTime horario_efetuado_atv;
     private Long usuarioId;
+    private List<PlantaCieTarefaDTO> plantas;
 
     public TarefaDTO() {
     }
 
-    public TarefaDTO(Long id, String nome_tarefa, String descricao_tarefa, LocalDateTime hora_efetuar_atv, List<Long> plantaUserIds, List<Repetir> repetir, LocalDateTime horario_efetuado_atv, Long usuarioId) {
+    public TarefaDTO(Long id, String nome_tarefa, String descricao_tarefa, LocalTime hora_efetuar_atv, List<Long> plantaUserIds, List<Repetir> repetir, Long usuarioId, List<PlantaCieTarefaDTO> plantas) {
         this.id = id;
         this.nome_tarefa = nome_tarefa;
         this.descricao_tarefa = descricao_tarefa;
         this.hora_efetuar_atv = hora_efetuar_atv;
         this.plantaUserIds = plantaUserIds;
         this.repetir = repetir;
-        this.horario_efetuado_atv = horario_efetuado_atv;
         this.usuarioId = usuarioId;
+        this.plantas = plantas;
+    }
+
+
+    public List<PlantaCieTarefaDTO> getPlantas() {
+        return plantas;
+    }
+
+    public void setPlantas(List<PlantaCieTarefaDTO> plantas) {
+        this.plantas = plantas;
     }
 
     public Long getId() {
@@ -59,11 +69,11 @@ public class TarefaDTO {
         this.descricao_tarefa = descricao_tarefa;
     }
 
-    public LocalDateTime getHora_efetuar_atv() {
+    public LocalTime getHora_efetuar_atv() {
         return hora_efetuar_atv;
     }
 
-    public void setHora_efetuar_atv(LocalDateTime hora_efetuar_atv) {
+    public void setHora_efetuar_atv(LocalTime hora_efetuar_atv) {
         this.hora_efetuar_atv = hora_efetuar_atv;
     }
 
@@ -83,14 +93,6 @@ public class TarefaDTO {
         this.repetir = repetir;
     }
 
-    public LocalDateTime getHorario_efetuado_atv() {
-        return horario_efetuado_atv;
-    }
-
-    public void setHorario_efetuado_atv(LocalDateTime horario_efetuado_atv) {
-        this.horario_efetuado_atv = horario_efetuado_atv;
-    }
-
     public Long getUsuarioId() {
         return usuarioId;
     }
@@ -107,7 +109,6 @@ public class TarefaDTO {
                 ", hora_efetuar_atv=" + hora_efetuar_atv +
                 ", plantaUserIds=" + plantaUserIds +
                 ", repetir=" + repetir +
-                ", horario_efetuado_atv=" + horario_efetuado_atv +
                 '}';
     }
 }

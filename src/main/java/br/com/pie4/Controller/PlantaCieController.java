@@ -80,7 +80,7 @@ public class PlantaCieController {
             }
 
             PlantaCie plantaCie = plantaCieService.alterar(plantaCieDTO);
-            return ResponseEntity.ok(plantaCie);
+            return ResponseEntity.ok("Dados da planta cie alterado com sucesso!");
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://127.0.0.1:5500")
 @RequestMapping(value = "/api/plant/user")
 public class PlantaUserController {
 
@@ -67,7 +66,7 @@ public class PlantaUserController {
     public ResponseEntity<?> alterar(@RequestBody PlantaUserDTO plantaUserDTO) {
         try {
             PlantaUser plantaUser = plantaUserService.alterar(plantaUserDTO);
-            return ResponseEntity.ok(plantaUser);
+            return ResponseEntity.ok("Dados da planta alterado com sucesso!");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {

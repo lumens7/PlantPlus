@@ -1,37 +1,44 @@
-const API_URL = "http://localhost:8080/api/plant/cie";
-
+const ID_USUARIO = localStorage.getItem("id"); 
 document.addEventListener("DOMContentLoaded", () => {
+  if (!validarAcesso(["ROLE_PLANTAS_CIE"])) return;
   montarModal();
   carregarPlantas();
 
-  // Toggle da pesquisa
-  document.getElementById("btn-search").addEventListener("click", () => {
-    const searchArea = document.getElementById("search-area");
-    searchArea.style.display = searchArea.style.display === "none" ? "flex" : "none";
-  });
+  // Mostrar/ocultar campo de pesquisa
+  const btnSearch = document.getElementById("btn-search");
+  const btnDoSearch = document.getElementById("btn-do-search");
 
-  // Botão de pesquisar
-  document.getElementById("btn-do-search").addEventListener("click", pesquisarPlantas);
+  if (btnSearch && btnDoSearch) {
+    btnSearch.addEventListener("click", () => {
+      const searchArea = document.getElementById("search-area");
+      searchArea.style.display =
+        searchArea.style.display === "none" ? "flex" : "none";
+    });
+
+    btnDoSearch.addEventListener("click", pesquisarPlantas);
+  }
 });
 
 // ======================
-// MONTA MODAL
+// MONTA O MODAL
 // ======================
 function montarModal() {
   const modal = document.createElement("div");
   modal.id = "modal-cadastro";
   modal.className = "modal";
+  modal.style.display = "none";
+
   modal.innerHTML = `
     <div class="modal-content">
       <h2>CADASTRO PLANTA CIE</h2>
 
       <input type="hidden" id="id">
-      
+
       <label for="nome">NOME PLANTA</label>
       <input type="text" id="nome" placeholder="nome planta...">
 
       <label for="nomeCientifico">NOME CIENTÍFICO</label>
-      <input type="text" id="nomeCientifico" placeholder="nome cientifico...">
+      <input type="text" id="nomeCientifico" placeholder="nome científico...">
 
       <label for="especie">ESPÉCIE</label>
       <input type="text" id="especie" placeholder="espécie...">
@@ -48,47 +55,58 @@ function montarModal() {
       <label for="urlFoto">URL FOTO</label>
       <div class="input-img">
         <input type="text" id="urlFoto" placeholder="url foto...">
-        <img id="preview-img" src="/src/main/resources/static/img/img.svg" alt="preview" />
+        <img id="preview-img" src="/src/main/resources/static/img/img.svg" alt="preview">
       </div>
 
-      <button id="btn-salvar">SALVAR</button>
-      <button id="btn-fechar">FECHAR</button>
+        <button id="btn-salvar">SALVAR</button>
+        <button id="btn-fechar">FECHAR</button>
+      
     </div>
   `;
+
   document.body.appendChild(modal);
 
-  // Bind eventos
+  // Eventos internos
   const btnAdd = document.getElementById("btn-add");
   const btnSalvar = document.getElementById("btn-salvar");
   const btnFechar = document.getElementById("btn-fechar");
   const urlFotoInput = document.getElementById("urlFoto");
   const previewImg = document.getElementById("preview-img");
 
-  btnAdd.addEventListener("click", abrirModalNovo);
+  if (btnAdd) btnAdd.addEventListener("click", abrirModalNovo);
   btnFechar.addEventListener("click", () => (modal.style.display = "none"));
   urlFotoInput.addEventListener("input", () => {
-    previewImg.src = urlFotoInput.value.trim() || "/src/main/resources/static/img/img.svg";
+    previewImg.src =
+      urlFotoInput.value.trim() ||
+      "/src/main/resources/static/img/img.svg";
   });
   btnSalvar.addEventListener("click", salvarPlanta);
 }
 
 // ======================
-// CARREGAR LISTA
+// LISTAR TODAS AS PLANTAS
 // ======================
 async function carregarPlantas() {
   try {
-    const response = await fetch(`${API_URL}/pesquisar/todos`);
+    const response = await fetch(`${API_URL_USER}/plant/cie/pesquisar/todos`, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
     if (!response.ok) throw new Error("Erro ao buscar plantas");
 
     const plantas = await response.json();
     renderizarLista(plantas);
   } catch (error) {
-    console.error("Erro:", error);
+    console.error("Erro ao carregar plantas:", error);
   }
 }
 
+
+
 // ======================
-// PESQUISA
+// PESQUISAR PLANTAS
 // ======================
 async function pesquisarPlantas() {
   const metodo = document.getElementById("search-method").value;
@@ -99,17 +117,16 @@ async function pesquisarPlantas() {
     return;
   }
 
-  // Mapeamento do método para a URL correta
   let url = "";
   switch (metodo) {
     case "nome":
-      url = `${API_URL}/pesquisar/nome?nome=${encodeURIComponent(valor)}`;
+      url = `${API_URL_USER}/plant/cie/pesquisar/nome?nome=${encodeURIComponent(valor)}`;
       break;
     case "nomeCientifico":
-      url = `${API_URL}/pesquisar/nomeCientifico?nomeCientifico=${encodeURIComponent(valor)}`;
+      url = `${API_URL_USER}/plant/cie/pesquisar/nomeCientifico?nomeCientifico=${encodeURIComponent(valor)}`;
       break;
     case "especie":
-      url = `${API_URL}/pesquisar/especie?especie=${encodeURIComponent(valor)}`;
+      url = `${API_URL_USER}/plant/cie/pesquisar/especie?especie=${encodeURIComponent(valor)}`;
       break;
     default:
       alert("Método de pesquisa inválido!");
@@ -117,7 +134,14 @@ async function pesquisarPlantas() {
   }
 
   try {
-    const response = await fetch(url);
+    const token = localStorage.getItem("token");
+    const response = await fetch(url, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+
     if (!response.ok) throw new Error("Erro ao pesquisar plantas");
 
     const plantas = await response.json();
@@ -128,24 +152,30 @@ async function pesquisarPlantas() {
   }
 }
 
+
 // ======================
-// RENDERIZA LISTA
+// RENDERIZA LISTA DE PLANTAS
 // ======================
 function renderizarLista(plantas) {
-  const lista = document.getElementById("plantas-list");
+  const lista = document.getElementById("main-list");
   lista.innerHTML = "";
+
+  if (!plantas || plantas.length === 0) {
+    lista.innerHTML = "<p>Nenhuma planta encontrada.</p>";
+    return;
+  }
 
   plantas.forEach(planta => {
     const card = document.createElement("div");
-    card.className = "planta-card";
+    card.className = "main-card";
     card.innerHTML = `
-    <div >
-      <h2>ID: ${planta.id}</h2> 
-      <div class="dados-plant">
-      <p>${planta.nomeCientifico}</p>
-      <img src="${planta.urlFoto}" alt="foto_planta" class="foto-planta">
-      </div>
-      </div>
+      <div>
+        <h2>ID: ${planta.id}</h2> 
+        <div class="dados-main">
+          <p>${planta.nomeCientifico}</p>
+          </div>
+        </div>
+          <img src="${planta.urlFoto}" alt="foto_planta" class="foto-main">
       <div class="card-actions">
         <button class="btn-editar" data-id="${planta.id}" title="Editar">
           <img src="/src/main/resources/static/img/edit.svg" alt="Editar" class="icon-btn">
@@ -167,7 +197,7 @@ function renderizarLista(plantas) {
 }
 
 // ======================
-// MODAL - NOVO
+// MODAL NOVO CADASTRO
 // ======================
 function abrirModalNovo() {
   document.querySelectorAll("#modal-cadastro input").forEach(el => (el.value = ""));
@@ -176,11 +206,16 @@ function abrirModalNovo() {
 }
 
 // ======================
-// MODAL - EDITAR
+// MODAL EDIÇÃO
 // ======================
 async function abrirModalEdicao(id) {
   try {
-    const response = await fetch(`${API_URL}/pesquisar/todos`);
+    const response = await fetch(`${API_URL_USER}/plant/cie/pesquisar/todos`, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
     const plantas = await response.json();
     const planta = plantas.find(p => p.id == id);
 
@@ -198,12 +233,12 @@ async function abrirModalEdicao(id) {
 
     document.getElementById("modal-cadastro").style.display = "flex";
   } catch (error) {
-    console.error("Erro:", error);
+    console.error("Erro ao abrir modal de edição:", error);
   }
 }
 
 // ======================
-// SALVAR
+// SALVAR PLANTA
 // ======================
 async function salvarPlanta() {
   const planta = {
@@ -218,40 +253,61 @@ async function salvarPlanta() {
   };
 
   try {
-    const url = planta.id ? `${API_URL}/alterar` : `${API_URL}/cadastrar`;
+    const url = planta.id
+      ? `${API_URL_USER}/plant/cie/alterar`
+      : `${API_URL_USER}/plant/cie/cadastrar`;
     const method = planta.id ? "PUT" : "POST";
 
+    const token = localStorage.getItem("token");
     const response = await fetch(url, {
       method,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(planta)
     });
 
     if (!response.ok) throw new Error("Erro ao salvar planta");
 
-    alert(planta.id ? "Planta atualizada com sucesso!" : "Planta cadastrada com sucesso!");
+    mostrarPopupSucesso(planta.id ? "Planta atualizada com sucesso!" : "Planta cadastrada com sucesso!");
+    setTimeout(()=>{
     document.getElementById("modal-cadastro").style.display = "none";
-    carregarPlantas(); // 🔄 Atualiza lista
+    },3000);
+    carregarPlantas();
   } catch (error) {
-    console.error("Erro:", error);
+    console.error("Erro ao salvar planta:", error);
     alert("Erro ao salvar planta");
   }
 }
 
+
 // ======================
-// DELETAR
+// DELETAR PLANTA
 // ======================
 async function deletarPlanta(id) {
   if (!confirm("Deseja realmente excluir esta planta?")) return;
 
   try {
-    const response = await fetch(`${API_URL}/deletar?id=${id}&idUsuario=1`, { method: "DELETE" });
+    const token = localStorage.getItem("token");
+    const response = await fetch(
+      `${API_URL_USER}/plant/cie/deletar?id=${id}&idUsuario=${ID_USUARIO}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
     if (!response.ok) throw new Error("Erro ao excluir planta");
 
-    alert("Planta excluída com sucesso!");
-    carregarPlantas(); // 🔄 Atualiza lista
+    mostrarPopupSucesso("Planta excluída com sucesso!");
+    setTimeout(()=> carregarPlantas(), 3000) ;
   } catch (error) {
-    console.error("Erro:", error);
+    console.error("Erro ao excluir planta:", error);
     alert("Erro ao excluir planta");
   }
 }
+

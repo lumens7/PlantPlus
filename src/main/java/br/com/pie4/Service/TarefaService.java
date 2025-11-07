@@ -1,16 +1,21 @@
 package br.com.pie4.Service;
 
+import br.com.pie4.DTO.PlantaCieTarefaDTO;
 import br.com.pie4.DTO.TarefaDTO;
-import br.com.pie4.Domain.PlantaUser;
-import br.com.pie4.Domain.Tarefas;
-import br.com.pie4.Domain.Usuario;
+import br.com.pie4.Domain.*;
 import br.com.pie4.Repository.PlantaUserRepository;
+import br.com.pie4.Repository.TarefasFeitasRepository;
 import br.com.pie4.Repository.TarefasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TarefaService {
@@ -21,6 +26,8 @@ public class TarefaService {
     private UsuarioService usuarioService;
     @Autowired
     private PlantaUserRepository plantaUserRepository;
+    @Autowired
+    private TarefasFeitasRepository tarefasFeitasRepository;
 
     public Tarefas cadastrarTarefa(TarefaDTO tarefaDTO){
         Tarefas tarefas = new Tarefas();
@@ -54,7 +61,6 @@ public class TarefaService {
         tarefas.setDescricao_tarefa(tarefaDTO.getDescricao_tarefa());
         tarefas.setHora_efetuar_atv(tarefaDTO.getHora_efetuar_atv());
         tarefas.setRepetir(tarefaDTO.getRepetir());
-        tarefas.setHorario_efetuado_atv(tarefaDTO.getHorario_efetuado_atv());
         tarefas.setPlantaUser(plantasSelecionadas);
         return tarefasRepository.save(tarefas);
     }
@@ -80,19 +86,87 @@ public class TarefaService {
         }
         return resultado;
     }
-    public List<Tarefas> findByUsuarioId(Long idUsuario){
-        List<Tarefas> todasTarefas = tarefasRepository.findAll();
-        List<Tarefas> tarefasUsuario = new ArrayList<>();
-        for (Tarefas tarefa : todasTarefas) {
-            if (tarefa.getUsuario().getId().equals(idUsuario)) {
-                tarefasUsuario.add(tarefa);
-            }
+        public List<TarefaDTO> findByUsuarioId(Long idUsuario) {
+            List<Tarefas> tarefas = tarefasRepository.findByUsuarioId(idUsuario);
+
+            return tarefas.stream().map(tarefa -> {
+                TarefaDTO dto = new TarefaDTO();
+                dto.setId(tarefa.getId());
+                dto.setNome_tarefa(tarefa.getNome_tarefa());
+                dto.setDescricao_tarefa(tarefa.getDescricao_tarefa());
+                dto.setHora_efetuar_atv(tarefa.getHora_efetuar_atv());
+                dto.setRepetir(tarefa.getRepetir());
+                dto.setUsuarioId(tarefa.getUsuario().getId());
+
+                if (tarefa.getPlantaUser() != null) {
+                    List<Long> plantaIds = tarefa.getPlantaUser().stream()
+                            .map(PlantaUser::getId)
+                            .collect(Collectors.toList());
+                    dto.setPlantaUserIds(plantaIds);
+
+                    List<PlantaCieTarefaDTO> plantaDTOs = tarefa.getPlantaUser().stream()
+                            .map(pu -> {
+                                PlantaCie plantaCie = pu.getPlantaCie();
+                                return new PlantaCieTarefaDTO(
+                                        pu.getId(),
+                                        plantaCie.getNome(),
+                                        plantaCie.getUrlFoto(),
+                                        pu.getQuantidade()
+                                );
+                            }).collect(Collectors.toList());
+                    dto.setPlantas(plantaDTOs);
+                }
+
+                return dto;
+            }).collect(Collectors.toList());
         }
-        return tarefasUsuario;
-    }
+
+
     public List<Tarefas> findAll(){
         return tarefasRepository.findAll();
     }
+    public TarefasFeitas tarefaFeita(Long id_tarefa, Long id_usuario) {
+        Tarefas tarefa = tarefasRepository.findByIdAndUsuarioId(id_tarefa, id_usuario);
+        if (tarefa == null) {
+            throw new IllegalArgumentException("Tarefa não encontrada para este usuário!");
+        }
+
+        LocalDate hoje = LocalDate.now();
+        LocalDateTime inicio = hoje.atStartOfDay();
+        LocalDateTime fim = hoje.atTime(LocalTime.MAX);
+
+        Optional<TarefasFeitas> feitaHoje = tarefasFeitasRepository.findFeitaHoje(id_tarefa, inicio, fim);
+        if (feitaHoje.isPresent()) {
+            throw new IllegalStateException("Esta tarefa já foi marcada como feita hoje!");
+        }
+
+        TarefasFeitas nova = new TarefasFeitas();
+        nova.setId_tarefa(tarefa.getId());
+        nova.setHorario_efetuado_atv(LocalDateTime.now());
+
+        return tarefasFeitasRepository.save(nova);
+    }
+
+
+    public void deleteTarefaFeita(Long id_tarefa_feita){
+        TarefasFeitas tarefaFeita = tarefasFeitasRepository.findById(id_tarefa_feita)
+                .orElseThrow(() -> new IllegalArgumentException("Tarefa feita não encontrada com id: " + id_tarefa_feita));
+        tarefasFeitasRepository.delete(tarefaFeita);
+    }
+    public List<Tarefas> findTarefasFeitas(Long id_usuario){
+        List<Tarefas> tarefasFeitasList = tarefasRepository.findByUsuarioId(id_usuario);
+        List<TarefasFeitas> tarefasFeitasRecords = tarefasFeitasRepository.findAll();
+        List<Tarefas> tarefasFeitasResultado = new ArrayList<>();
+        for (Tarefas tarefa : tarefasFeitasList) {
+            for (TarefasFeitas feita : tarefasFeitasRecords) {
+                if (tarefa.getId().equals(feita.getId_tarefa())) {
+                    tarefasFeitasResultado.add(tarefa);
+                }
+            }
+        }
+        return tarefasFeitasResultado;
+    }
+
     public Tarefas alterar(TarefaDTO dto) {
         Tarefas tarefa = tarefasRepository.findById(dto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Tarefa não encontrada com id: " + dto.getId()));

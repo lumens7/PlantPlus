@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +63,8 @@ class TarefaServiceTest {
                 usuarioDTO.getDocumento_pessoal(),
                 usuarioDTO.getMail(),
                 usuarioDTO.getTelefone(),
-                usuarioDTO.getSenha()
+                usuarioDTO.getSenha(),
+                null
         ));
 
         // Planta científica
@@ -96,11 +98,11 @@ class TarefaServiceTest {
                 null,
                 "Regar as plantas",
                 "Regar as plantas do jardim",
-                LocalDateTime.now().plusDays(1),
+                LocalTime.now(),
                 List.of(plantaUserBase.getId()),
                 new ArrayList<>(List.of(Tarefas.Repetir.SEGUNDA, Tarefas.Repetir.QUARTA)),
-                null,
-                usuarioBase.getId()
+                usuarioBase.getId(),
+                null
         );
         tarefaBase = tarefaService.cadastrarTarefa(tarefaDTO);
     }
@@ -119,11 +121,11 @@ class TarefaServiceTest {
                 tarefaBase.getId(),
                 "Podar plantas",
                 "Podar as plantas mortas",
-                LocalDateTime.now().plusDays(2),
+                LocalTime.now(),
                 List.of(plantaUserBase.getId()),
                 new ArrayList<>(List.of(Tarefas.Repetir.SEXTA)),
-                null,
-                usuarioBase.getId()
+                usuarioBase.getId(),
+                null
         );
         Tarefas alterada = tarefaService.alterar(dto);
         assertEquals("Podar plantas", alterada.getNome_tarefa());
@@ -132,9 +134,9 @@ class TarefaServiceTest {
 
     @Test
     void deveListarTarefasPorUsuario() {
-        List<Tarefas> lista = tarefaService.findByUsuarioId(usuarioBase.getId());
+        List<TarefaDTO> lista = tarefaService.findByUsuarioId(usuarioBase.getId());
         assertEquals(1, lista.size());
-        assertEquals(usuarioBase.getId(), lista.get(0).getUsuario().getId());
+        assertEquals(usuarioBase.getId(), lista.get(0).getUsuarioId());
     }
 
     @Test
@@ -145,7 +147,7 @@ class TarefaServiceTest {
 
     @Test
     void deveLancarExcecaoAoDeletarDeOutroUsuario() {
-        Usuario outro = usuarioRepository.save(new Usuario(null, "Maria", "98765432100", "maria@mail.com", "11888888888", "senha"));
+        Usuario outro = usuarioRepository.save(new Usuario(null, "Maria", "98765432100", "maria@mail.com", "11888888888", "senha", null));
         Exception ex = assertThrows(IllegalArgumentException.class,
                 () -> tarefaService.deleteTarefa(tarefaBase.getId(), outro.getId()));
         assertTrue(ex.getMessage().contains("Usuário não tem permissão"));

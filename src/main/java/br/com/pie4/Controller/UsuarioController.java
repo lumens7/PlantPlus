@@ -1,5 +1,8 @@
 package br.com.pie4.Controller;
 
+import br.com.pie4.DTO.AlterPasswordUserDTO;
+import br.com.pie4.DTO.PutUserDTO;
+import br.com.pie4.DTO.RolesPutDTO;
 import br.com.pie4.DTO.UsuarioDTO;
 import br.com.pie4.Domain.Usuario;
 import br.com.pie4.Service.UsuarioService;
@@ -32,6 +35,27 @@ public class UsuarioController {
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao iniciar cadastro: " + e.getMessage());
+        }
+    }
+    @PutMapping("/alterar")
+    public ResponseEntity<?> alterarDadosUser(@RequestBody PutUserDTO putUserDTO){
+        try{
+            usuarioService.alterarDadosUsuario(putUserDTO);
+            return ResponseEntity.ok("Dados do usuário alterados com sucesso!");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao alterar dados do usuário: " + e.getMessage());
+        }
+
+    }
+    @PutMapping("/alterar/senha")
+    public ResponseEntity<?> alterarSenha(@RequestBody AlterPasswordUserDTO alterPasswordUserDTO){
+        try{
+            usuarioService.alterarSenhaUsuario(alterPasswordUserDTO);
+            return ResponseEntity.ok("Senha alterada com sucesso!");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao alterar dados do usuário: " + e.getMessage());
         }
     }
 
@@ -89,6 +113,36 @@ public class UsuarioController {
                     .body("Erro interno:  " + e.getMessage());
         }
     }
-
+    @PutMapping("/role/alterar")
+    public ResponseEntity<?> alterarRolesUser(@RequestBody RolesPutDTO rolesPutDTO){
+        try{
+            usuarioService.alterarRolesUsuario(rolesPutDTO);
+            return ResponseEntity.ok("Roles Adicionadas com sucesso!");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao alterar roles do usuário: " + e.getMessage());
+        }
+    }
+    @GetMapping("/role/pesquisar/todas")
+    public ResponseEntity<?> pesquisarTodasRoles(){
+        try{
+            return ResponseEntity.ok(usuarioService.findAllRoles());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao buscar roles: " + e.getMessage());
+        }
+    }
+    @GetMapping("/role/pesquisar/id")
+    public ResponseEntity<?> pesquisarRolesPorIdUsuario(@RequestParam Long id){
+        try{
+            if (id == null){
+                return ResponseEntity.badRequest().body("O id do usuário deve ser informado!");
+            }
+            return ResponseEntity.ok(usuarioService.findRolesByIdUsuario(id));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao buscar roles do usuário: " + e.getMessage());
+        }
+    }
 
 }
