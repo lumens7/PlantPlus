@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    @Query("SELECT u FROM Usuario u WHERE u.nome = %:nome_usuario%")
+    @Query("SELECT u FROM Usuario u WHERE LOWER(u.nome) LIKE LOWER(CONCAT('%', :nome_usuario, '%'))")
     List<Usuario> findByNome(@Param("nome_usuario") String nome_usuario);
     @Query("SELECT u FROM Usuario u WHERE u.documento_pessoal = :documento_pessoal")
     Usuario findByDocumento(@Param("documento_pessoal") String documento_pessoal);

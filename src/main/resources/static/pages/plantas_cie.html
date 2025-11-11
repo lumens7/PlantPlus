@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plantas CIE</title>
+  <link rel="icon" type="image/x-icon" href="/src/main/resources/static/img/logo.ico">
   <link rel="stylesheet" href="/src/main/resources/static/css/main.css">
   <link rel="stylesheet" href="/src/main/resources/static/css/sucesso.css">
   <link rel="stylesheet" href="/src/main/resources/static/css/cadastro.css">
@@ -20,17 +21,14 @@
   
   <div class="app-container">
     
-    <!-- Header -->
     <header id="menu-principal" class="header"></header>
     <button id="logoutButton" class="logout-button"><img src="/src/main/resources/static/img/logoff.svg" alt=""></button>
 
-    <!-- Ações -->
     <div class="actions">
       <button id="btn-add" class="action-btn">+</button>
       <button id="btn-search" class="action-btn"><img src="/src/main/resources/static/img/search.svg" alt=""></button>
     </div>
 
-    <!-- Área de pesquisa -->
     <div id="search-area" class="search-area" style="display: none;">
       <select id="search-method">
         <option value="nomeCientifico">Nome Científico</option>
@@ -41,9 +39,7 @@
       <button id="btn-do-search">Pesquisar</button>
     </div>
 
-    <!-- Lista de Plantas -->
     <section id="main-list" class="main-list">
-      <!-- preenchido via JS -->
     </section>
     
   </div>

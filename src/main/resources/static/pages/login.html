@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
+  <link rel="icon" type="image/x-icon" href="/src/main/resources/static/img/logo.ico">
   <link rel="stylesheet" href="/src/main/resources/static/css/menu.css">
   <link rel="stylesheet" href="/src/main/resources/static/css/login.css">
   <link rel="stylesheet" href="/src/main/resources/static/css/sucesso.css">
@@ -14,14 +15,10 @@
 <body>
   <div class="login-container">
     
-    <!-- topo com os sprites e logo -->
     <div class="login-header">
-      <!-- <img src="/src/main/resources/static/img/fazendeiro1.png" alt="fazendeiro" class="sprite"> -->
       <img src="/src/main/resources/static/img/logo.png" alt="logo" class="logo">
-      <!-- <img src="/src/main/resources/static/img/fazendeiro2.png" alt="fazendeiro" class="sprite"> -->
     </div>
 
-    <!-- formulário -->
     <form id="login-form" class="login-form">
       <label for="email">EMAIL</label>
       <input type="email" id="email" name="email" placeholder="email..." autocomplete="off" required>
@@ -30,13 +27,11 @@
       <input type="password" id="senha" name="senha" placeholder="senha..." autocomplete="off" required>
 
       <button type="submit" class="btn-login">ENTRAR</button>
-      <a href="#" class="forgot-password">esqueceu a senha?</a>
+      <a href="/src/main/resources/static/pages/alterar_senha.html" class="forgot-password">esqueceu a senha?</a>
     </form>
 
-    <!-- link para cadastro -->
     <p class="register-text">Não tem conta? <a href="signup.html">Cadastre-se</a></p>
   </div>
-  <!-- Popup de sucesso -->
   <div id="popup-sucesso" class="popup-sucesso">
     <p id="popup-mensagem"></p>
   </div>

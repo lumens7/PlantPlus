@@ -88,18 +88,18 @@ public class UsuarioController {
     }
 
     @GetMapping("/pesquisar/documento")
-    public ResponseEntity<?> pesquisarDocumentoUser(@RequestParam("documento")String documento){
-        try{
+    public ResponseEntity<?> pesquisarDocumentoUser(@RequestParam("documento") String documento) {
+        try {
             Usuario usuario = usuarioService.findByDocumento(documento);
-            if(usuario == null){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma Usuário encontrado com o documento: "+ documento);
-            }
             return ResponseEntity.ok(usuario);
-        }catch (Exception e ){
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro interno:  " + e.getMessage());
+                    .body("Erro interno: " + e.getMessage());
         }
     }
+
     @GetMapping("/pesquisar/mail")
     public ResponseEntity<?> pesquisarMailUser(@RequestParam("mail")String mail){
         try{
@@ -108,9 +108,11 @@ public class UsuarioController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma Usuário encontrado com o mail: "+ mail);
             }
             return ResponseEntity.ok(usuario);
-        }catch (Exception e ){
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro interno:  " + e.getMessage());
+                    .body("Erro interno: " + e.getMessage());
         }
     }
     @PutMapping("/role/alterar")

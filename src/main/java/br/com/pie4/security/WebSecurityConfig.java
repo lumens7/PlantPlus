@@ -72,6 +72,11 @@ public class WebSecurityConfig {
 
                         //usuário permissões
                         .requestMatchers("/api/user/cadastrar").permitAll()
+                        //endpoints publicos por conta de usuários que esquecem a senha
+                        .requestMatchers("/api/user/pesquisar/documento").permitAll()
+                        .requestMatchers("/api/user/pesquisar/mail").permitAll()
+                        .requestMatchers("/api/user/alterar/senha").permitAll()
+
                         .requestMatchers("/api/user/pesquisar/**").hasAuthority("ROLE_USUARIO")
                         .requestMatchers("/api/user/alterar").hasAuthority("ROLE_USUARIO")
                         .requestMatchers("/api/user/deletar").hasAuthority("ROLE_CONTROLE_USUARIO")

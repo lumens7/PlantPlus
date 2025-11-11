@@ -8,6 +8,7 @@ import br.com.pie4.Domain.Roles;
 import br.com.pie4.Domain.Usuario;
 import br.com.pie4.Repository.RolesRepository;
 import br.com.pie4.Repository.UsuarioRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -118,31 +119,35 @@ public class UsuarioService {
         return usuarios.get(0);
     }
 
-    public Usuario findByDocumento(String documento){
-        Usuario usuarios = usuarioRepository.findByDocumento(documento);
-        if (usuarios.getId() != null){
-            throw new IllegalArgumentException("Este documento já foi cadastrado em outro usuário!");
+    public Usuario findByDocumento(String documento) {
+        Usuario usuario = usuarioRepository.findByDocumento(documento);
+        if (usuario == null) {
+            throw new IllegalArgumentException("Nenhum usuário encontrado com o documento informado.");
         }
-        return usuarios;
+        return usuario;
     }
 
-    public Usuario findByMail(String mail){
-        Usuario usuarios = usuarioRepository.findByMail(mail);
-        if (usuarios.getId() != null){
-            throw new IllegalArgumentException("Este e-mail já foi cadastrado em outro usuário!");
+    public Usuario findByMail(String mail) {
+        Usuario usuario = usuarioRepository.findByMail(mail);
+        if (usuario == null) {
+            throw new IllegalArgumentException("Nenhum usuário encontrado com o e-mail informado.");
         }
-        return usuarios;
+        return usuario;
     }
-    public void alterarRolesUsuario(RolesPutDTO rolesPutDTO){
+    @Transactional
+    public void alterarRolesUsuario(RolesPutDTO rolesPutDTO) {
         Usuario usuario = usuarioRepository.findById(rolesPutDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado com o id: " + rolesPutDTO.getId()));
+
         Set<Roles> novasRoles = new HashSet<>();
-        for(Long idRole : rolesPutDTO.getIdsRoles()){
+        for (Long idRole : rolesPutDTO.getIdsRoles()) {
             Roles role = rolesRepository.findById(idRole)
                     .orElseThrow(() -> new IllegalArgumentException("Role não encontrada com o id: " + idRole));
             novasRoles.add(role);
         }
+
         usuario.setRoles(novasRoles);
+        usuarioRepository.save(usuario); // ✅ salva as alterações no banco
     }
     public Set<Roles> findAllRoles(){
         return new HashSet<>(rolesRepository.findAll());

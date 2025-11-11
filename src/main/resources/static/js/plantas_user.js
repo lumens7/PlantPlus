@@ -1,23 +1,18 @@
-const ID_USUARIO = localStorage.getItem("id"); // 🔹 depois você troca pelo usuário logado
+const ID_USUARIO = localStorage.getItem("id"); 
 
 document.addEventListener("DOMContentLoaded", () => {
   if (!validarAcesso(["ROLE_PLANTAS_USER"])) return;
   montarModalUser();
   carregarPlantasUser();
 
-  // Toggle da pesquisa
   document.getElementById("btn-search").addEventListener("click", () => {
     const searchArea = document.getElementById("search-area");
     searchArea.style.display = searchArea.style.display === "none" ? "flex" : "none";
   });
 
-  // Botão de pesquisar
   document.getElementById("btn-do-search").addEventListener("click", pesquisarPlantasUser);
 });
 
-// ======================
-// MONTA MODAL
-// ======================
 function montarModalUser() {
   const modal = document.createElement("div");
   modal.id = "modal-cadastro-user";
@@ -59,13 +54,12 @@ function montarModalUser() {
   document.getElementById("btn-fechar").addEventListener("click", () => (modal.style.display = "none"));
   document.getElementById("btn-salvar").addEventListener("click", salvarPlantaUser);
 
-  // Evento de busca automática
   const inputBusca = document.getElementById("nomePlantaBusca");
   let debounceTimer;
 
   inputBusca.addEventListener("input", () => {
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(buscarPlantasCie, 300); // executa 300ms após parar de digitar
+    debounceTimer = setTimeout(buscarPlantasCie, 300); 
   });
 }
 async function buscarPlantasCie() {
@@ -80,7 +74,6 @@ async function buscarPlantasCie() {
   }
 
   try {
-    //const token = localStorage.getItem("token"); // token salvo no login
 
     const response = await fetch(`${API_URL_USER}/plant/cie/pesquisar/todos`, {
       headers: {
@@ -128,15 +121,12 @@ async function buscarPlantasCie() {
 
 
 function selecionarPlantaCie(planta) {
-  // Preenche os campos do modal
   document.getElementById("id_plantaCie").value = planta.id;
   document.getElementById("nomePlantaBusca").value = planta.nome;
 
-  // Atualiza a foto da planta
   const previewImg = document.getElementById("previewPlanta");
   previewImg.src = planta.urlFoto || "/src/main/resources/static/img/img.svg";
 
-  // Fecha a lista de resultados
   const selectResultados = document.getElementById("resultadoBusca");
   selectResultados.innerHTML = '<option value="">Selecione uma planta</option>';
 }
@@ -149,9 +139,6 @@ function abrirModalNovoUser() {
 }
 
 
-// ======================
-// CARREGAR LISTA
-// ======================
 async function carregarPlantasUser() {
   try {
     const response = await fetch(`${API_URL_USER}/plant/user/pesquisar/plant_user?id_plant_user=${ID_USUARIO}`, {
@@ -169,9 +156,6 @@ async function carregarPlantasUser() {
   }
 }
 
-// ======================
-// PESQUISA
-// ======================
 async function pesquisarPlantasUser() {
   const metodo = document.getElementById("search-method").value;
   const valor = document.getElementById("search-value").value.trim();
@@ -200,9 +184,6 @@ async function pesquisarPlantasUser() {
   }
 }
 
-// ======================
-// RENDERIZA LISTA
-// ======================
 function renderizarListaUser(plantas) {
   const lista = document.getElementById("main-list");
   lista.innerHTML = "";
@@ -240,17 +221,11 @@ function renderizarListaUser(plantas) {
   );
 }
 
-// ======================
-// MODAL - NOVO
-// ======================
 function abrirModalNovoUser() {
   document.querySelectorAll("#modal-cadastro-user input").forEach(el => (el.value = ""));
   document.getElementById("modal-cadastro-user").style.display = "flex";
 }
 
-// ======================
-// MODAL - EDITAR
-// ======================
 async function abrirModalEdicaoUser(id) {
   try {
     const response = await fetch(`${API_URL_USER}/plant/user/pesquisar/plant_user?id_plant_user=${ID_USUARIO}`, {
@@ -275,9 +250,6 @@ async function abrirModalEdicaoUser(id) {
   }
 }
 
-// ======================
-// SALVAR
-// ======================
 async function salvarPlantaUser() {
   const plantaUser = {
     id: document.getElementById("id").value || null,
@@ -302,7 +274,6 @@ async function salvarPlantaUser() {
 
     if (!response.ok) throw new Error("Erro ao salvar planta do usuário");
 
-    // alert(plantaUser.id ? "Planta atualizada com sucesso!" : "Planta cadastrada com sucesso!");
     mostrarPopupSucesso(plantaUser.id ? "Planta atualizada com sucesso!" : "Planta cadastrada com sucesso!")
     setTimeout(()=>{
       document.getElementById("modal-cadastro-user").style.display = "none";
@@ -314,9 +285,6 @@ async function salvarPlantaUser() {
   }
 }
 
-// ======================
-// DELETAR
-// ======================
 async function deletarPlantaUser(id) {
   confirmarAcao(
     "Deseja realmente excluir esta planta?",
