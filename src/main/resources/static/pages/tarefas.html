@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarefas</title>
+    <link rel="icon" type="image/x-icon" href="/src/main/resources/static/img/logo.ico">
+    <link rel="stylesheet" href="/src/main/resources/static/css/menu.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/logoff.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/main.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/sucesso.css">
+    <link rel="stylesheet" href="/src/main/resources/static/css/tarefas.css">
+  
+    <script defer src="/src/main/resources/static/js/menu.js"></script>
+    <script defer src="/src/main/resources/static/js/main.js"></script>
+    <script defer src="/src/main/resources/static/js/auth.js"></script>
+    <script defer src="/src/main/resources/static/js/sucesso.js"></script>
+    <script defer src="/src/main/resources/static/js/tarefas.js"></script>
+    <script defer src="/src/main/resources/static/js/logoff.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header id="menu-principal" class="header"></header>
+        <button id="logoutButton" class="logout-button"><img src="/src/main/resources/static/img/logoff.svg" alt=""></button>
+        
+        <div class="actions">
+            <button id="btn-add" class="action-btn">+</button>
+            <button id="btn-search" class="action-btn"><img src="/src/main/resources/static/img/filter.svg" alt=""></button>
+        </div>
+        <div id="filtro-dias" class="filtro-dias" style="display: none;">
+            <h3>Filtrar por dias:</h3>
+            <div class="dias-filtro">
+                <label class="dia-label">
+                    <input type="checkbox" class="filtro-dia" value="DOMINGO" />
+                    <span class="dia-fake">DOM</span>
+                </label>
+                <label class="dia-label">
+                    <input type="checkbox" class="filtro-dia" value="SEGUNDA" />
+                    <span class="dia-fake">SEG</span>
+                </label>
+                <label class="dia-label">
+                    <input type="checkbox" class="filtro-dia" value="TERCA" />
+                    <span class="dia-fake">TER</span>
+                </label>
+                <label class="dia-label">
+                    <input type="checkbox" class="filtro-dia" value="QUARTA" />
+                    <span class="dia-fake">QUA</span>
+                </label>
+                <label class="dia-label">
+                    <input type="checkbox" class="filtro-dia" value="QUINTA" />
+                    <span class="dia-fake">QUI</span>
+                </label>
+                <label class="dia-label">
+                    <input type="checkbox" class="filtro-dia" value="SEXTA" />
+                    <span class="dia-fake">SEX</span>
+                </label>
+                <label class="dia-label">
+                    <input type="checkbox" class="filtro-dia" value="SABADO" />
+                    <span class="dia-fake">SAB</span>
+                </label>
+                
+            </div>
+            <button id="btn-aplicar-filtro">Aplicar</button>
+            <button id="btn-limpar-filtro">Limpar</button>
+        </div>
+        <div id="search-area" class="search-area" style="display: none;">
+            <select id="search-method">
+                <option value="nome">Nome</option>
+                <option value="dia">dia</option>
+                <option value="planta">Planta</option>
+            </select>
+            <input type="text" id="search-value" placeholder="Digite o valor da pesquisa...">
+            <button id="btn-do-search">Pesquisar</button>
+        </div>
+        <section id="main-list" class="main-list">
+        </section>
+    </div>
+
+</body>
+</html>

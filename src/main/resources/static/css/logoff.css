@@ -1,0 +1,19 @@
+/* Estilo do botão de logoff */
+.logout-button {
+    position: fixed;
+    top: 1.5rem;
+    right: 1rem;
+    border: none;
+    padding: .6rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.5s ease;
+    border-radius: 10rem;
+    border: 2px solid #D00000;
+    max-height: 6rem;
+    max-width: 6rem;
+    margin-right: 2rem;
+    background-color: var(--text);
+    z-index: 999;
+}
+

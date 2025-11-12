@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfil do Usuário</title>
+  <link rel="icon" type="image/x-icon" href="/src/main/resources/static/img/logo.ico">
+  <link rel="stylesheet" href="/src/main/resources/static/css/usuario.css">
+  <link rel="stylesheet" href="/src/main/resources/static/css/main.css">
+  <link rel="stylesheet" href="/src/main/resources/static/css/menu.css">
+  <link rel="stylesheet" href="/src/main/resources/static/css/sucesso.css">
+  <link rel="stylesheet" href="/src/main/resources/static/css/logoff.css">
+
+  <script defer src="/src/main/resources/static/js/main.js"></script>
+  <script defer src="/src/main/resources/static/js/menu.js"></script>
+  <script defer src="/src/main/resources/static/js/auth.js"></script>
+  <script defer src="/src/main/resources/static/js/logoff.js"></script>
+  <script defer src="/src/main/resources/static/js/sucesso.js"></script>
+  <script defer src="/src/main/resources/static/js/usuario.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <header id="menu-principal" class="header"></header>
+    <button id="logoutButton" class="logout-button">
+      <img src="/src/main/resources/static/img/logoff.svg" alt="Sair">
+    </button>
+
+    <section class="usuario-container">
+      <div id="usuario-card" class="usuario-card">
+        <p>Carregando dados do usuário...</p>
+      </div>
+
+      <div class="usuario-links">
+        <a href="/src/main/resources/static/pages/alterar_senha.html" class="usuario-btn">
+          Alterar senha
+        </a>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

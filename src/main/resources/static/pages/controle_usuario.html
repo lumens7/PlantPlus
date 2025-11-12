@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Controle de Usuários</title>
+  <link rel="icon" type="image/x-icon" href="/src/main/resources/static/img/logo.ico">
+  <link rel="stylesheet" href="/src/main/resources/static/css/main.css">
+  <link rel="stylesheet" href="/src/main/resources/static/css/menu.css">
+  <link rel="stylesheet" href="/src/main/resources/static/css/logoff.css">
+  <link rel="stylesheet" href="/src/main/resources/static/css/sucesso.css">
+  <link rel="stylesheet" href="/src/main/resources/static/css/controle_usuarios.css">
+
+  <script defer src="/src/main/resources/static/js/main.js"></script>
+  <script defer src="/src/main/resources/static/js/menu.js"></script>
+  <script defer src="/src/main/resources/static/js/auth.js"></script>
+  <script defer src="/src/main/resources/static/js/logoff.js"></script>
+  <script defer src="/src/main/resources/static/js/sucesso.js"></script>
+  <script defer src="/src/main/resources/static/js/controle_usuarios.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <header id="menu-principal" class="header"></header>
+    <button id="logoutButton" class="logout-button">
+      <img src="/src/main/resources/static/img/logoff.svg" alt="Sair">
+    </button>
+
+    <section class="controle-container">
+      <h1>Controle de Usuários</h1>
+
+      <div class="controle-busca">
+        <div class="controle-busca">
+            <select id="tipo-pesquisa">
+                <option value="nome">Nome</option>
+                <option value="documento">Documento Pessoal</option>
+                <option value="email">E-mail</option>
+            </select>
+
+            <input type="text" id="campo-pesquisa" placeholder="Digite o valor...">
+            <button id="btn-pesquisar">Pesquisar</button>
+            </div>
+
+      </div>
+
+      <div id="resultado-usuario" class="resultado-usuario"></div>
+    </section>
+  </div>
+
+  <!-- Modal de Permissões -->
+  <div id="modal-permissoes" class="modal hidden">
+    
+    <div class="modal-content">
+      <h2>Permissões do Usuário</h2>
+      <div id="lista-permissoes"></div>
+      <div class="modal-actions">
+        <button id="btn-salvar-roles" class="btn-salvar">Salvar</button>
+        <button id="btn-cancelar-roles" class="btn-cancelar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
