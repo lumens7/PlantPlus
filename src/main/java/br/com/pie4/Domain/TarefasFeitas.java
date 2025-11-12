@@ -8,10 +8,10 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+//@Getter
+//@Setter
+//@AllArgsConstructor
+//@NoArgsConstructor
 @Entity
 @Table(name = "tb_tarefas_feitas")
 public class TarefasFeitas {
