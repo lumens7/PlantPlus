@@ -2,6 +2,7 @@ package br.com.pie4.Service;
 
 import br.com.pie4.DTO.PlantaCieTarefaDTO;
 import br.com.pie4.DTO.TarefaDTO;
+import br.com.pie4.DTO.TarefasFeitasDTO;
 import br.com.pie4.Domain.*;
 import br.com.pie4.Repository.PlantaUserRepository;
 import br.com.pie4.Repository.TarefasFeitasRepository;
@@ -73,6 +74,7 @@ public class TarefaService {
     public List<Tarefas> findByDiaSemana(Tarefas.Repetir dia, Long idUsuario){
         return tarefasRepository.findByRepetirDiaSemanaAndUsuarioId(dia, idUsuario);
     }
+
     public List<Tarefas> findByNomePlanta(String nome, Long idUsuario){
         List<PlantaUser> plantaUsers = plantaUserRepository.findByUsuarioIdAndPlantaCieNome(idUsuario, nome);
         List<Tarefas> resultado = new ArrayList<>();

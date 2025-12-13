@@ -1,7 +1,7 @@
 (() => {
   const ID_USUARIO = localStorage.getItem("id");
   const token = localStorage.getItem("token");
-  let mapTarefaFeita = new Map(); // 🔹 Mapa global das tarefas feitas
+  let mapTarefaFeita = new Map(); 
 
   document.addEventListener("DOMContentLoaded", () => {
     if (!validarAcesso(["ROLE_TAREFAS"])) return;
@@ -19,7 +19,6 @@
     container.innerHTML = "<p>Carregando tarefas...</p>";
 
     try {
-      // 🔹 Busca tarefas do dia
       const responseTarefas = await fetch(
         `${API_URL_USER}/tarefa/pesquisar/dia?dia=${diaSemana}&idUsuario=${ID_USUARIO}`,
         {
@@ -52,22 +51,21 @@
         }
       );
 
-      mapTarefaFeita.clear(); // limpa o mapa antes de recarregar
+      mapTarefaFeita.clear();
       let tarefasFeitas = [];
-
+      
       if (feitasResponse.ok) {
         tarefasFeitas = await feitasResponse.json();
         tarefasFeitas.forEach(t => mapTarefaFeita.set(t.id_tarefa, t.id));
       } else if (feitasResponse.status === 404) {
-        // Nenhuma tarefa feita — tudo bem
         tarefasFeitas = [];
       } else {
         throw new Error("Erro ao buscar tarefas feitas");
       }
-
-      const idsFeitos = tarefasFeitas.map(t => t.id_tarefa);
+      
+      const idsFeitos = [...new Set(tarefasFeitas.map(t => t.id))];
       renderizarTarefas(tarefas, idsFeitos);
-
+      
     } catch (error) {
       console.error("Erro ao carregar tarefas:", error);
       container.innerHTML = `<p>Erro ao carregar tarefas.</p>`;
@@ -121,6 +119,10 @@
 
       container.appendChild(card);
     });
+    const concluidasHoje = tarefas.filter(tarefa => idsFeitos.includes(tarefa.id)).length;
+
+  atualizarDashboard(tarefas.length, concluidasHoje);
+
   }
 
   async function marcarTarefaComoFeita(idTarefa) {
@@ -139,7 +141,7 @@
       if (!response.ok) throw new Error("Erro ao marcar tarefa como feita");
 
       const tarefaFeita = await response.json();
-      mapTarefaFeita.set(idTarefa, tarefaFeita.id); // 🔹 Atualiza o mapa
+      mapTarefaFeita.set(idTarefa, tarefaFeita.id);
 
       mostrarPopupSucesso("Tarefa marcada como concluída!");
     } catch (error) {
@@ -168,10 +170,17 @@
 
       if (!response.ok) throw new Error("Erro ao desmarcar tarefa feita");
 
-      mapTarefaFeita.delete(idTarefa); // 🔹 Remove do mapa
+      mapTarefaFeita.delete(idTarefa); 
       mostrarPopupSucesso("Tarefa marcada como não concluída.");
     } catch (error) {
       console.error("Erro:", error);
     }
   }
+
+  function atualizarDashboard(total, concluidas) {
+    document.getElementById("dash-total").textContent = total;
+    document.getElementById("dash-concluidas").textContent = concluidas;
+    document.getElementById("dash-pendentes").textContent = total - concluidas;
+  }
+  
 })();

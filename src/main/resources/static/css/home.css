@@ -71,3 +71,32 @@ input:checked + .slider::before {
   font-weight: 600;
   color: var(--bg-dark);
 }
+
+
+.dashboard-tarefas {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem auto 2rem;
+  width: 95%;
+}
+
+.dash-card {
+  background: var(--bg-with);
+  color: var(--bg-dark);
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  min-width: 100px;
+  text-align: center;
+}
+
+.dash-card h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.dash-card p {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-top: .5rem;
+}

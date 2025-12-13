@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -18,4 +19,10 @@ public interface TarefasRepository extends JpaRepository<Tarefas, Long> {
 
     @Query("SELECT t FROM Tarefas t WHERE t.id = :id_tarefa AND t.usuario.id = :id_usuario")
     Tarefas findByIdAndUsuarioId(Long id_tarefa, Long id_usuario);
+
+//    @Query("SELECT new com.seuprojeto.dto.TarefaFeitaDTO(tf.id, tf.id_tarefa, tf.data_feita) " +
+//            "FROM TarefaFeita tf WHERE tf.id_usuario = :idUsuario " +
+//            "AND tf.data_feita BETWEEN :inicio AND :fim ORDER BY tf.data_feita ASC")
+//    List<Tarefas> buscarSemana(Long idUsuario, LocalDate inicio, LocalDate fim);
+
 }

@@ -1,6 +1,7 @@
 package br.com.pie4.Controller;
 
 import br.com.pie4.DTO.TarefaDTO;
+import br.com.pie4.DTO.TarefasFeitasDTO;
 import br.com.pie4.Domain.Tarefas;
 import br.com.pie4.Domain.TarefasFeitas;
 import br.com.pie4.Service.TarefaService;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
